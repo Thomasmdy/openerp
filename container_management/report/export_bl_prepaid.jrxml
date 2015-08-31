@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="export_bl_prepaid" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="6a2eda03-4836-4d37-900a-f7799f591b2e">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="ship_line_id" class="java.lang.Integer" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[select f.amount, cur.name from
+(select sum(net_amount) amount, currency_id from export_freight_line
+where freight_term='prepaid' and ship_line_id=$P{ship_line_id}
+group by currency_id) f left join res_currency cur on f.currency_id = cur.id]]>
+	</queryString>
+	<field name="amount" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[Amount]]></fieldDescription>
+	</field>
+	<field name="name" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<textField>
+				<reportElement uuid="25cca673-2dbc-489a-987a-06a270a662a9" x="0" y="0" width="34" height="15"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="3fad09de-658d-4144-814e-92bf1ced708b" x="34" y="0" width="45" height="15"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="5">
+			<line>
+				<reportElement uuid="0a5cfc7b-b656-4dfd-bc17-6cb30f5751f4" x="1" y="1" width="100" height="1"/>
+			</line>
+		</band>
+	</pageFooter>
+</jasperReport>

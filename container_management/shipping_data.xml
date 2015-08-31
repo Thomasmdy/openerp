@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="container_state_1" model="shipping.container.status">
+            <field name="name">AV</field>
+            <field name="description">Available</field>
+        </record>
+
+        <record id="container_state_2" model="shipping.container.status">
+            <field name="name">used</field>
+            <field name="description">Used</field>
+        </record>
+        
+    </data>
+</openerp>

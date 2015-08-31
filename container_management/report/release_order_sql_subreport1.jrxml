@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="release_order_sql_subreport1" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="f902561c-eda1-416f-898b-ddb9c4f41b4d">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="ship_line_id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select * from shipping_container where ship_line_id =$P{ship_line_id}]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer"/>
+	<field name="create_uid" class="java.lang.Integer"/>
+	<field name="create_date" class="java.sql.Timestamp"/>
+	<field name="write_date" class="java.sql.Timestamp"/>
+	<field name="write_uid" class="java.lang.Integer"/>
+	<field name="feet_40" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[40']]></fieldDescription>
+	</field>
+	<field name="digit6" class="java.lang.Integer">
+		<fieldDescription><![CDATA[6 digit number]]></fieldDescription>
+	</field>
+	<field name="name" class="java.lang.String"/>
+	<field name="feet_20" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[20']]></fieldDescription>
+	</field>
+	<field name="serial_no" class="java.lang.String">
+		<fieldDescription><![CDATA[Serial No]]></fieldDescription>
+	</field>
+	<field name="prefix" class="java.lang.String">
+		<fieldDescription><![CDATA[Prefix]]></fieldDescription>
+	</field>
+	<field name="ship_line_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[BL Order Line]]></fieldDescription>
+	</field>
+	<field name="high_cube" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[HC]]></fieldDescription>
+	</field>
+	<field name="check1" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Check Digit]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="21">
+			<textField>
+				<reportElement uuid="9ec874e3-819b-403d-90ed-5e74d5a3e53a" x="0" y="0" width="210" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

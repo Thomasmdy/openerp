@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record id="view_customers_listing_report" model="ir.ui.view">
+		    <field name="name">Customers Listing</field>
+		    <field name="model">customers.listing.report</field>
+		    <field name="type">form</field>
+		    <field name="arch" type="xml">
+			<form string="Customers Listing" version="7.0">
+					 <group col="4" colspan="4">		
+						<field name="date"/>			
+						<field name="output_type"/> 
+						<field name="company_id" ref="base.main_company" on_change="onChange_company()"/>
+						<field name="child" on_change="onChange_multiCompanyCheckbox(company_id,child)"/>						
+						<footer>
+						<button name="print_report" string="Print Report" colspan="1" type="object" icon="gtk-print" />
+						or
+						<button icon='gtk-cancel' special="cancel" string="Close" />                            
+						</footer>
+					</group>
+				</form>
+			</field>
+		</record>
+		<record id="action_customers_listing" model="ir.actions.act_window">
+		    <field name="name">Customers Listing</field>
+		    <field name="type">ir.actions.act_window</field>
+		    <field name="res_model">customers.listing.report</field>
+		    <field name="view_type">form</field>
+		    <field name="view_mode">form</field>
+		    <field name="target">new</field>			
+		</record>
+		<menuitem id="customers_listing" action="action_customers_listing" name="Customers Listing" parent="base.next_id_64" />
+	</data>
+</openerp>

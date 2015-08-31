@@ -1,0 +1,290 @@
+<openerp>
+<data>
+
+        <menuitem id="menu_detention_main" parent="menu_shipping_root" name="Detention charge" sequence="26"/>
+                
+        <record id="detention_charge_search_form_view" model="ir.ui.view">
+            <field name="name">shipping.detention.charge.search.form</field>
+            <field name="model">shipping.detention.charge</field>
+            <field name="arch" type="xml">
+                <search string="Detention Charge">
+                   <field name="name" string="Name" filter_domain="['|',('name','ilike',self)]"/>
+                </search>
+            </field>
+        </record>
+
+		<record id="shipping_detention_charge_tree_view" model="ir.ui.view">
+            <field name="name">shipping.detention.charge.tree</field>
+            <field name="model">shipping.detention.charge</field>
+            <field eval="7" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Detention charge Lines" editable="bottom">
+                    <field name="name"/>
+                    <field name="day_from"/>
+                    <field name="day_to"/>
+                    <field name="type" />
+                    <field name="period_type" />
+                    <field name="date" />
+                    <field name="charges"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="open_view_shipping_detention_charge_list" model="ir.actions.act_window">
+            <field name="name">Detention Charge</field>
+            <field name="res_model">shipping.detention.charge</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="shipping_detention_charge_tree_view"/>
+            <field name="search_view_id" ref="detention_charge_search_form_view"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a Detention Charge.
+              </p><p>
+                With just a quick glance on the OpenERP Detention Charge screen, you
+                can easily find all the information you need for each Detention Charge;
+              </p>
+            </field>
+        </record>
+        
+        <menuitem action="open_view_shipping_detention_charge_list" 
+        id="menu_view_shipping_detention_charge_list" sequence="1" 
+        parent="menu_detention_main" />
+        
+        <!-- Detention Collection Start-->
+        <record id="shipping_detention_collection_tree_view" model="ir.ui.view">
+            <field name="name">shipping.detention.collection.tree</field>
+            <field name="model">shipping.detention.collection</field>
+            <field eval="7" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Detention Collection Lines">
+                	<field name="consignee"/>
+                    <field name="vassel_id"/>
+                    <field name="in_voyage_no"/>
+                    <field name="port_of_loading_id"/>
+                    <field name="bl_no" />
+                    <field name="date"/>
+                    <field name="state"/>
+                    <field name="container_total"/>
+                </tree>
+            </field>
+        </record>
+        
+		<record id="shipping_detention_collection_form_view" model="ir.ui.view">
+            <field name="name">shipping.detention.collection.form</field>
+            <field name="model">shipping.detention.collection</field>
+            <field name="arch" type="xml">
+                <form string="Detention Collection" version="7.0">
+                    <header>
+                        <button name="button_confirm"  states="draft" string="Confirm" type="object" />
+                        <button name="button_cancel" states="draft,cancel,approved" string="Cancel" type="object" />
+                        <button name="create_invoice" states="confirmed" string="Receipt Invoices" type="object" />
+                        <field name="state" widget="statusbar" statusbar_visible="draft,invoiced,confirmed,done" statusbar_colors='{"cancel":"red"}'/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="consignee"/>
+						        <field name="vassel_id"/>
+						        <field name="in_voyage_no"/>
+                            </group>
+                            <group>
+                                <field name="port_of_loading_id"/>
+						        <field name="bl_no" on_change="onchange_bl_no(bl_no,vassel_id, in_voyage_no)"/>
+						        <field name='ship_line_id' invisible="1" />
+						        <field name="date"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Container Nos" >
+                            	<group>
+                                    <group>
+                                        <separator string="Container" />
+                                        <field name="detention_lines" colspan="4" nolabel="1">
+                                            <tree editable="bottom" string="Container lines">
+                                                <field name="container_id"  />
+                                            </tree>
+                                        </field>
+                                        <group class="oe_subtotal_footer oe_right" colspan="2" name="container_total">
+                                            <field name="container_total" /> 
+                                        </group>
+                                    </group>
+                                    <group>
+                                        <separator string=" " />                                  
+                                        
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record id="open_view_shipping_detention_collection_list" model="ir.actions.act_window">
+            <field name="name">Detention Collection</field>
+            <field name="res_model">shipping.detention.collection</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a Detention Collection.
+              </p><p>
+                With just a quick glance on the OpenERP Detention Collection screen, you
+                can easily find all the information you need for each Detention Collection;
+              </p>
+            </field>
+        </record>
+        
+        <menuitem action="open_view_shipping_detention_collection_list" 
+        id="menu_view_shipping_detention_collection_list" sequence="2" 
+        parent="menu_detention_main" />
+        
+        <!-- Detention Collection End-->
+        
+        <!-- Detention Charge Receipt Start -->
+        
+        <record id="detention_charge_receipt_tree_view" model="ir.ui.view">
+            <field name="name">detention.charge.receipt.tree</field>
+            <field name="model">detention.charge.receipt</field>
+            <field eval="7" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Detention Charge Receipt">
+                	<field name="name"/>
+                    <field name="consignee"/>
+                    <field name="bl_no" />
+                    <field name="date"/>
+                    <field name="state"/>
+                    <field name="qty_total"/>
+                    <field name="net_total"/>
+                </tree>
+            </field>
+        </record>
+        
+		<record id="detention_charge_receipt_form_view" model="ir.ui.view">
+            <field name="name">detention.charge.receipt.form</field>
+            <field name="model">detention.charge.receipt</field>
+            <field name="arch" type="xml">
+                <form string="Detention Charge" version="7.0">
+                    <header>
+                        <button name="button_confirm"  states="draft" string="Confirm" type="object" />
+                        <button name="button_print_invoice"  states="confirmed" string="Print Invoice" type="object" />
+                        <button name="button_cancel" states="draft,cancel,approved" string="Cancel" type="object" />
+                        <button name="create_invoice" states="confirmed" string="Receipt Invoices" type="object" />
+                        <field name="state" widget="statusbar" statusbar_visible="draft,invoiced,confirmed,done" statusbar_colors='{"cancel":"red"}'/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+						        <field name="consignee"/>
+						        <field name="bl_no" />
+                            </group>
+                            <group>
+                                <field name="date"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Receipt Lines" >
+                            	<group>
+		                            <separator string="Receipt Lines" />
+		                            <field name="receipt_lines" colspan="4" nolabel="1">
+		                                <tree string="Container lines">
+		                                	<field name='period_id' />
+								            <field name="name"/>
+								            <field name='container' />
+											<field name="type"/>
+											<field name="quantity" sum="Total Qty"/>
+						                    <field name="charge"/>
+						                    <field name="date_from"/>
+						                    <field name="date_to"/>
+											<field name="number_of_day"/>
+											<field name="amount_total" />
+		                                </tree>
+		                                <form string="Container lines" version="7.0">
+		                                	<group>
+			                                	<group>
+			                                		<field name='period_id' />
+												    <field name="name"/>
+													<field name="type"/>
+													<field name="quantity" />
+													<field name='container' />
+													<field name='eta_ygn' />
+													<field name='date_free_to' />
+												</group>
+												<group>
+										            <field name="charge"/>
+										            <field name="charge_amount"/>
+        						                    <field name="date_from"/>
+        						                    <field name="date_to"/>
+													<field name="number_of_day"/>
+													<field name="amount_total" />
+												</group>
+												
+											</group>
+											<group>
+												
+											</group>
+											<label for="remar" string="Remark"/>
+											<field name="remark" nolabel="1"/>
+		                                </form>
+		                            </field>
+                                </group>
+                                <group class="oe_subtotal_footer oe_right" colspan="2" name="amount_total">
+                                    <field name="net_total" /> 
+                                    
+		                            <label class="oe_subtotal" for="qty_total" string="Total Container(s)"/>
+		                            <field class="oe_subtotal" name="qty_total" nolabel="1" colspan="2" /> 
+                                </group>
+
+
+                                
+                                <field name='description' nolabel="1"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record id="detention_charge_receipt_search_form_view" model="ir.ui.view">
+            <field name="name">detention.charge.receipt.search.form</field>
+            <field name="model">detention.charge.receipt</field>
+            <field name="arch" type="xml">
+                <search string="Detention Receipt">
+                   <field name="name" string="Name" filter_domain="['|',('name','ilike',self)]"/>
+                   <field name="consignee" string="Consignee" />
+                </search>
+            </field>
+        </record>
+        
+        <record id="open_view_detention_charge_receipt_list" model="ir.actions.act_window">
+            <field name="name">Detention Charge Receipt</field>
+            <field name="res_model">detention.charge.receipt</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="detention_charge_receipt_search_form_view"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a Detention Charge Receipt.
+              </p><p>
+                With just a quick glance on the OpenERP Detention Charge Receipt screen, you
+                can easily find all the information you need for each Detention Charge Receipt;
+              </p>
+            </field>
+        </record>
+        
+        <menuitem action="open_view_detention_charge_receipt_list" 
+        id="menu_view_detention_charge_receipt_list" sequence="2" 
+        parent="menu_detention_main" />
+        
+    	<!-- Detention Collection End -->
+
+    	<!-- Detention Reports -->
+    	
+    	<menuitem action="open_po_request_view_list" id="menu_open_po_request_view_list" sequence="3" 
+        parent="menu_shipping_reporting" />
+        
+</data>
+</openerp>

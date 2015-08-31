@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="freight_soa" language="groovy" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="5" bottomMargin="5" uuid="5a22a5b1-1cd9-48b3-b216-7114b274d58c">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="company_name" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["DZ CONTAINER SERVICES CO., LTD."]]></defaultValueExpression>
+	</parameter>
+	<parameter name="address" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["NO.446, 7FL, Merchant Road, Yangon, Myanmar"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="tel_fax" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["Tel/Fax: 951-240622,240511, 392200, 392300."]]></defaultValueExpression>
+	</parameter>
+	<parameter name="invoice_id" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[134]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/home/hms/businessauto/modules_internal7/container_management/report/"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select rec.*, rec_line.*, rp.name consignee_name from
+(select id, bl_no, consignee,source, net_total, name invoice_no, date, qty_total from detention_charge_receipt
+where id= $P{invoice_id} ) rec inner join
+(select receipt_id,container, date_from ,date_to, period_id, name, number_of_day, charge, type, period_type, amount_total, remark, eta_ygn, date_free_to
+from detention_charge_receipt_line) rec_line on rec.id = rec_line.receipt_id
+left join (select id, name from res_partner) rp on rec.consignee = rp.id
+order by rec_line.container, rec_line.period_type, rec_line.type]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer"/>
+	<field name="bl_no" class="java.lang.String">
+		<fieldDescription><![CDATA[BL Name]]></fieldDescription>
+	</field>
+	<field name="consignee" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Consignee]]></fieldDescription>
+	</field>
+	<field name="source" class="java.lang.String"/>
+	<field name="net_total" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[Container Total]]></fieldDescription>
+	</field>
+	<field name="invoice_no" class="java.lang.String"/>
+	<field name="date" class="java.sql.Date">
+		<fieldDescription><![CDATA[End Date]]></fieldDescription>
+	</field>
+	<field name="qty_total" class="java.lang.String">
+		<fieldDescription><![CDATA[Total Qty]]></fieldDescription>
+	</field>
+	<field name="receipt_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Receipt]]></fieldDescription>
+	</field>
+	<field name="container" class="java.lang.String">
+		<fieldDescription><![CDATA[Container]]></fieldDescription>
+	</field>
+	<field name="date_from" class="java.sql.Date">
+		<fieldDescription><![CDATA[Start Date]]></fieldDescription>
+	</field>
+	<field name="date_to" class="java.sql.Date">
+		<fieldDescription><![CDATA[End Date]]></fieldDescription>
+	</field>
+	<field name="period_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Period]]></fieldDescription>
+	</field>
+	<field name="name" class="java.lang.String"/>
+	<field name="number_of_day" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Day]]></fieldDescription>
+	</field>
+	<field name="charge" class="java.lang.Double">
+		<fieldDescription><![CDATA[1 Day Charge]]></fieldDescription>
+	</field>
+	<field name="type" class="java.lang.String">
+		<fieldDescription><![CDATA[Internal Type]]></fieldDescription>
+	</field>
+	<field name="period_type" class="java.lang.String">
+		<fieldDescription><![CDATA[Period Type]]></fieldDescription>
+	</field>
+	<field name="amount_total" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[Total]]></fieldDescription>
+	</field>
+	<field name="remark" class="java.lang.String">
+		<fieldDescription><![CDATA[Remark]]></fieldDescription>
+	</field>
+	<field name="eta_ygn" class="java.sql.Date">
+		<fieldDescription><![CDATA[ETA/YGN]]></fieldDescription>
+	</field>
+	<field name="date_free_to" class="java.sql.Date">
+		<fieldDescription><![CDATA[DATE FREE TO]]></fieldDescription>
+	</field>
+	<field name="consignee_name" class="java.lang.String"/>
+	<variable name="sum_of_net_total" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{amount_total}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="60" splitType="Stretch">
+			<subreport>
+				<reportElement uuid="3b661659-dc90-4ac9-87d2-2d97df8d8992" x="0" y="0" width="595" height="44"/>
+				<subreportParameter name="company_name"/>
+				<subreportParameter name="address"/>
+				<subreportParameter name="tel_fax"/>
+				<subreportParameter name="invoice_id"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "detention_receipt_invoice1.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="84">
+			<subreport>
+				<reportElement uuid="cb88ca18-abc2-49c9-bf8d-921dade581d0" x="0" y="22" width="595" height="50"/>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="tel_fax">
+					<subreportParameterExpression><![CDATA[$P{tel_fax}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="address">
+					<subreportParameterExpression><![CDATA[$P{address}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="company_name">
+					<subreportParameterExpression><![CDATA[$P{company_name}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="invoice_id">
+					<subreportParameterExpression><![CDATA[$P{invoice_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "detention_receipt_invoice1.jasper"]]></subreportExpression>
+			</subreport>
+			<line>
+				<reportElement uuid="74702ca4-dd9e-4b9e-997a-aa7957194c7d" x="0" y="9" width="595" height="1"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+		</band>
+	</detail>
+</jasperReport>

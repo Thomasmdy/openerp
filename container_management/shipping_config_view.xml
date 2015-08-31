@@ -1,0 +1,31 @@
+<openerp>
+<data>
+		
+        <record id="shipping_config_tree_view" model="ir.ui.view">
+            <field name="name">shipping.config.tree</field>
+            <field name="model">shipping.config</field>
+            <field eval="7" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Shipping Configuration" editable="bottom">
+                    <field name="bl_fees"/> 
+                    <field name="ro_amount" />
+                    <field name="date" />
+                </tree>
+            </field>
+        </record>
+        
+        <record id="open_view_shipping_config_form_view" model="ir.actions.act_window">
+            <field name="name">Shipping Configuration</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+             <field name="view_mode">tree,form</field>             
+             <field name="view_id" ref="shipping_config_tree_view"/> 
+			 <field name="res_model">shipping.config</field>             
+         </record>    
+         
+        <menuitem action="open_view_shipping_config_form_view" 
+        id="menu_view_shipping_config_form_view" sequence="5" 
+        parent="menu_config_main" />
+        
+</data>
+</openerp>

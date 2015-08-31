@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="po_requset.jrxml" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="192"/>
+	<property name="ireport.y" value="129"/>
+	<parameter name="parameter1" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select bol.etb, sf.bl_no, bol.bl_date ,sf.p20,sf.p40,f20,f40 from (
+----Freight And QTY start
+select sf.ship_line_id, sf.freight_total , sf.shipper, sf.port_of_loading_id, sf.vassel_id ,sf.bl_no, sf.type, sfl.* from shipping_freight sf
+left join
+(
+-----freight QTY and rate Start-----
+select qty_res.*, rate_res.f20, rate_res.f40 from (
+select freight_id, sum(p20) as p20, sum(p40) as p40 from (
+select freight_id, sum(quantity) as p20 , 0 as p40 from shipping_freight_line
+where per='P20' and freight_id is not null
+group by freight_id
+union
+select  freight_id,0 as p20, sum(quantity) as p40 from shipping_freight_line
+where per='P40'
+and freight_id is not null
+ group by freight_id
+ ) qty
+group by freight_id
+) qty_res left join
+ (select freight_id, sum(f20) as f20, sum(f40) as f40 from (
+select freight_id, sum(net_amount) as f20 , 0 as f40 from shipping_freight_line
+where per='P20' and freight_id is not null
+group by freight_id
+union
+select  freight_id,0 as f20, sum(net_amount) as f40 from shipping_freight_line
+where per='P40'
+and freight_id is not null
+ group by freight_id
+) rate group by freight_id
+) rate_res on qty_res.freight_id = rate_res.freight_id
+
+-----freight QTY and rate End -----
+
+) sfl on sf.id = sfl.freight_id
+
+----Freight And QTY End
+) sf
+left  join shipping_bl_order_line bol on bol.id = sf.ship_line_id;]]>
+	</queryString>
+	<field name="etb" class="java.sql.Date">
+		<fieldDescription><![CDATA[ETB YGN]]></fieldDescription>
+	</field>
+	<field name="bl_no" class="java.lang.String">
+		<fieldDescription><![CDATA[BL Name]]></fieldDescription>
+	</field>
+	<field name="bl_date" class="java.sql.Date">
+		<fieldDescription><![CDATA[BL Date]]></fieldDescription>
+	</field>
+	<field name="p20" class="java.math.BigDecimal"/>
+	<field name="p40" class="java.math.BigDecimal"/>
+	<field name="f20" class="java.math.BigDecimal"/>
+	<field name="f40" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="135" splitType="Stretch"/>
+	</title>
+	<columnHeader>
+		<band height="37" splitType="Stretch">
+			<rectangle>
+				<reportElement x="1" y="2" width="555" height="33"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="206" y="2" width="110" height="33"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[ETA MMRGN
+YYY/MM/DD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="316" y="2" width="121" height="33"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[In]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="437" y="2" width="114" height="33"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[HC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="2" width="200" height="33"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[B/L No]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="19" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch">
+			<textField>
+				<reportElement x="191" y="25" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{parameter1}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

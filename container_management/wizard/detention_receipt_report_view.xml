@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_detention_receipt_report" model="ir.ui.view">
+            <field name="name">detention.receipt.report.form</field>
+            <field name="model">detention.receipt.report</field>
+            <field name="type">form</field>  
+            <field name="arch" type="xml">
+             <form string="Detention Receipt" version="7.0">
+             	<field name="date" />
+             	<field name="output_type" />
+                <footer>
+                    <button name="print_report" string="Print" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+            </field>
+        </record>
+
+        <record id="action_detention_receipt_report" model="ir.actions.act_window">
+            <field name="name">Detention Collection Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">detention.receipt.report</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">form</field>
+            <field name="target">new</field>
+         </record>
+            
+		 <menuitem action="action_detention_receipt_report" id="menu_detention_receipt_report" 
+        	parent="menu_shipping_reporting" />
+    </data>
+</openerp>

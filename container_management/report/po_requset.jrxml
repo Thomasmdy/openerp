@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="po_requset.jrxml" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="38b710bf-3dfa-44b2-90a6-e8c9868747ac">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="144"/>
+	<parameter name="address" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["NO.446, 7FL, Merchant Road, Yangon, Myanmar"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="tel_fax" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["Tel/Fax: 951-240622,240511, 392200, 392300."]]></defaultValueExpression>
+	</parameter>
+	<parameter name="date" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["30-JUNE-2014"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="messers" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="cost_month" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["06-2014"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="company_name" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["DZ CONTAINER SERVICES CO., LTD."]]></defaultValueExpression>
+	</parameter>
+	<parameter name="int_cost_month" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<parameter name="int_cost_year" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[2015]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select bol.etb, sf.bl_no, bol.bl_date ,sf.p20,sf.p40,f20,f40 from (
+----Freight And QTY start
+select sf.ship_line_id, sf.freight_total , sf.shipper, sf.port_of_loading_id, sf.vassel_id ,sf.bl_no, sf.type, sfl.* from shipping_freight sf
+left join
+(
+-----freight QTY and rate Start-----
+select qty_res.*, rate_res.f20, rate_res.f40 from (
+select freight_id, sum(p20) as p20, sum(p40) as p40 from (
+select freight_id, sum(quantity) as p20 , 0 as p40 from shipping_freight_line
+where per='P20' and freight_id is not null
+group by freight_id
+union
+select  freight_id,0 as p20, sum(quantity) as p40 from shipping_freight_line
+where per='P40'
+and freight_id is not null
+ group by freight_id
+ ) qty
+group by freight_id
+) qty_res left join
+ (select freight_id, sum(f20) as f20, sum(f40) as f40 from (
+select freight_id, sum(net_amount) as f20 , 0 as f40 from shipping_freight_line
+where per='P20' and freight_id is not null
+group by freight_id
+union
+select  freight_id,0 as f20, sum(net_amount) as f40 from shipping_freight_line
+where per='P40'
+and freight_id is not null
+ group by freight_id
+) rate group by freight_id
+) rate_res on qty_res.freight_id = rate_res.freight_id
+
+-----freight QTY and rate End -----
+
+) sfl on sf.id = sfl.freight_id
+
+----Freight And QTY End
+) sf
+inner join (
+select * from shipping_bl_order_line
+where type !='export' and state not in ('cancel','draft')
+ and extract(month from bl_date) =$P{int_cost_month} and extract(year from bl_date) =$P{int_cost_year}
+) bol on bol.id = sf.ship_line_id]]>
+	</queryString>
+	<field name="etb" class="java.sql.Date">
+		<fieldDescription><![CDATA[ETB YGN]]></fieldDescription>
+	</field>
+	<field name="bl_no" class="java.lang.String">
+		<fieldDescription><![CDATA[BL Name]]></fieldDescription>
+	</field>
+	<field name="bl_date" class="java.sql.Date"/>
+	<field name="p20" class="java.math.BigDecimal"/>
+	<field name="p40" class="java.math.BigDecimal"/>
+	<field name="f20" class="java.math.BigDecimal"/>
+	<field name="f40" class="java.math.BigDecimal"/>
+	<variable name="in_ward" class="java.lang.String">
+		<variableExpression><![CDATA[($F{f20}+$F{f40})*0.025]]></variableExpression>
+	</variable>
+	<variable name="hc_charge" class="java.lang.String">
+		<variableExpression><![CDATA[($F{p20}+$F{p40})*5.0]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="135" splitType="Stretch">
+			<textField>
+				<reportElement uuid="9a5d75dc-c6b6-4231-8fe8-8dec2bcbbd53" x="1" y="44" width="550" height="43"/>
+				<textElement textAlignment="Center">
+					<font fontName="Kinnari" size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{tel_fax}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="d2f59882-054f-47f2-ba9b-b26222887002" x="1" y="5" width="550" height="43"/>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="19" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{company_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e6b1012a-d92c-4ab6-9265-2e5b030c340a" x="1" y="25" width="550" height="43"/>
+				<textElement textAlignment="Center">
+					<font fontName="Kinnari" size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{address}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8f6928bb-0a61-410f-977f-6f6abb24f5a2" x="1" y="91" width="200" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["DATE:     " + $P{date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="132b8e84-e581-4367-923d-398df362bf5d" x="1" y="112" width="200" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["COST MONTH: " + $P{cost_month}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="37" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="3159a590-125f-47f0-b4c1-e2a8ef0a50ea" x="1" y="2" width="555" height="33"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="752f5656-987a-4e8d-80e7-649be300cda5" x="206" y="2" width="110" height="33"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[ETA MMRGN
+YYY/MM/DD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="61e07d40-40eb-46ba-9ece-f123e760adb7" x="316" y="2" width="121" height="33"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[In]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="923ac356-0e51-4687-9d9c-bac5c8679078" x="437" y="2" width="114" height="33"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[HC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="02f3275f-340b-430a-8a35-afa9fcd9b686" x="1" y="2" width="200" height="33"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[B/L No]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="19" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="ee85c18f-0289-4df4-b094-b1f0c497cdab" x="1" y="-2" width="555" height="20"/>
+			</rectangle>
+			<textField>
+				<reportElement uuid="572037eb-60fd-4797-96e7-393ebdb77608" x="12" y="-1" width="189" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{bl_no}]]></textFieldExpression>
+			</textField>
+			<textField pattern="yyyy/MM/dd">
+				<reportElement uuid="727c55de-26e9-4783-ac79-a5a08c6d81cb" x="209" y="-1" width="98" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{etb}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e3b90448-2265-4a5e-bbfb-c83f1e2b13d1" x="316" y="-1" width="109" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{in_ward}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8b2a072a-01a3-416e-86f5-f596026d924a" x="437" y="-1" width="101" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{hc_charge}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="f3ed5610-dca2-457e-9cf5-6b1398d5ffa7" x="206" y="-35" width="1" height="54"/>
+			</line>
+			<line>
+				<reportElement uuid="d8cb79a3-9031-4cce-bba9-0434b9dfdfe9" x="316" y="-35" width="1" height="54"/>
+			</line>
+			<line>
+				<reportElement uuid="0205d037-4ed0-4b7b-9bfd-7e787fab3ca4" x="436" y="-35" width="1" height="54"/>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

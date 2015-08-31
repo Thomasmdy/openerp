@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="freight_soa" language="groovy" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="5" bottomMargin="5" uuid="5a22a5b1-1cd9-48b3-b216-7114b274d58c">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="company_name" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["DZ CONTAINER SERVICES CO., LTD."]]></defaultValueExpression>
+	</parameter>
+	<parameter name="address" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["NO.446, 7FL, Merchant Road, Yangon, Myanmar"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="tel_fax" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["Tel/Fax: 951-240622,240511, 392200, 392300."]]></defaultValueExpression>
+	</parameter>
+	<parameter name="invoice_id" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[3]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/home/hms/businessauto/modules_internal7/container_management/report/"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT sgp.*, pml.*, cur.curr_name FROM
+(select id,doc_date,ref,notes, amount_total,name, origin from shipping_general_payment
+where id= $P{invoice_id}) sgp LEFT JOIN
+(
+select amount, currency_id, general_payment_id from payment_move_line
+WHERE general_payment_id=$P{invoice_id}
+) pml ON sgp.id = pml.general_payment_id
+LEFT JOIN
+(SELECT id, name curr_name FROM res_currency ) cur ON cur.id= pml.currency_id]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer"/>
+	<field name="doc_date" class="java.sql.Date">
+		<fieldDescription><![CDATA[Doc Date]]></fieldDescription>
+	</field>
+	<field name="ref" class="java.lang.String">
+		<fieldDescription><![CDATA[Ref.]]></fieldDescription>
+	</field>
+	<field name="notes" class="java.lang.String">
+		<fieldDescription><![CDATA[Notes]]></fieldDescription>
+	</field>
+	<field name="amount_total" class="java.lang.Double">
+		<fieldDescription><![CDATA[Total]]></fieldDescription>
+	</field>
+	<field name="name" class="java.lang.String"/>
+	<field name="origin" class="java.lang.String">
+		<fieldDescription><![CDATA[Source Document]]></fieldDescription>
+	</field>
+	<field name="amount" class="java.lang.Double">
+		<fieldDescription><![CDATA[Amount]]></fieldDescription>
+	</field>
+	<field name="currency_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Secondary Currency]]></fieldDescription>
+	</field>
+	<field name="general_payment_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[General Payment]]></fieldDescription>
+	</field>
+	<field name="curr_name" class="java.lang.String"/>
+	<variable name="sum_of_net_total" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{amount_total}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="60" splitType="Stretch">
+			<subreport>
+				<reportElement uuid="dc0b81c3-0a4c-4666-b2c4-4ae43bec3f76" x="0" y="0" width="586" height="41"/>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="tel_fax">
+					<subreportParameterExpression><![CDATA[$P{tel_fax}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="address">
+					<subreportParameterExpression><![CDATA[$P{address}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="company_name">
+					<subreportParameterExpression><![CDATA[$P{company_name}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="invoice_id">
+					<subreportParameterExpression><![CDATA[$P{invoice_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "general_receipt_invoice1.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="84">
+			<line>
+				<reportElement uuid="74702ca4-dd9e-4b9e-997a-aa7957194c7d" x="0" y="9" width="595" height="1"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<subreport>
+				<reportElement uuid="60129fcb-ca99-493c-9b78-9b7deddd1473" x="0" y="23" width="586" height="41"/>
+				<subreportParameter name="invoice_id">
+					<subreportParameterExpression><![CDATA[$P{invoice_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "general_receipt_invoice1.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>

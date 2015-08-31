@@ -1,0 +1,145 @@
+<openerp>
+<data>
+
+        <menuitem id="menu_booking_main" parent="menu_shipping_root" name="Booking" sequence="25"/>
+                
+        <record id="booking_search_form_view" model="ir.ui.view">
+            <field name="name">shipping.booking.search.form</field>
+            <field name="model">shipping.booking</field>
+            <field name="arch" type="xml">
+                <search string="Booking">
+                   <field name="name" string="Booking Name" filter_domain="['|',('name','ilike',self)]"/>
+                </search>
+            </field>
+        </record>
+
+		<record id="shipping_booking_tree_view" model="ir.ui.view">
+            <field name="name">shipping.booking.tree</field>
+            <field name="model">shipping.booking</field>
+            <field eval="7" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Booking Lines">
+                    <field name="name"/>
+                    <field name="shipper"/>
+                    <field name="consignee"/>
+                    <field name="vassel_id"/>
+                    <field name="voyage_no"/>
+                    <field name="date"/>
+                    <field name="etd"/>
+                    <field name="commodity"/>
+                    <field name="destination"/>
+                    <field name="operator_code"/>
+                    <field name="container_yard"/>
+                    <field name="booking_lines"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        
+		<record id="shipping_booking_form_view" model="ir.ui.view">
+            <field name="name">shipping.booking.form</field>
+            <field name="model">shipping.booking</field>
+            <field name="arch" type="xml">
+                <form string="Booking Invoices" version="7.0">
+                    <header>
+                        <button name="button_approved" states="draft" string="Approved" type="object" />
+                        <button name="print_report"  states="draft,approved" string="Print Booking" type="object" />
+                        <button name="print_attached_report"  states="draft,approved" string="Print Attached" type="object" />
+                        <button name="button_seal_payment" states="approved" string="Seal Payment" type="object" />
+                        <button name="button_cancel" string="Cancel" type="object" />
+                        <field name="state" widget="statusbar" statusbar_visible="draft,approved,done" statusbar_colors='{"cancel":"red"}'/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="shipper"/>
+                                <field name="consignee"/>
+                                <field name="vassel_id"/>
+                                <field name="voyage_no"/>
+                                <field name="date"/>
+                                <field name="etd" />
+                                <label for="feet_40" string="Total No. Of Containers"/>
+                                <div>
+                                    20':  <field name="feet_40" class="oe_inline" attrs="{'readonly':True}" />  +  
+                                    40': <field name="feet_20"  class="oe_inline" attrs="{'readonly':True}" />  =  
+                                     <field name="total_no_of_container" class="oe_inline" attrs="{'readonly':True}"/>  Total
+                                </div>
+                            </group>
+                            <group>
+                                <field name="commodity"/>
+                                <field name="destination"/>
+                                <field name="operator_code"/>
+                                <field name="container_yard"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Booking" >
+                                <group>
+                                    <group>
+                                        <separator string="Booking Lines" />
+                                        <field name="booking_lines" colspan="4" nolabel="1">
+                                            <tree editable="bottom" string="Booking lines">
+                                                <field name="container_id"  domain="[('state','=','TE')]"/>
+                                                <field name="type" />
+                                                <field name="goh_amount" />
+                                                <field name="vassel_id" />
+                                                <field name="voyage_no" />
+                                            </tree>
+                                            <form string="Container lines" version="7.0">
+                                                <group col="4">
+                                                    <field name="container_id" domain="[('state','=','TE')]"/>
+                                                    <field name="type" />
+                                                    <field name="goh_amount" string="GOH Amt(USD)" sum="Total Amount"/>
+                                                    <field name="vassel_id" />
+                                                    <field name="voyage_no" />
+                                                </group>
+                                            </form>
+                                        </field>
+                                    </group>
+                                    <group>
+                                        <separator string="Seal Lines" />
+                                        <field name="seal_lines" colspan="4" nolabel="1">
+                                            <tree editable="bottom" string="Seal lines">
+                                                <field name="product_id" />
+                                                <field name="seal_no" />
+                                                <field name="price" sum="Total Amount"/>
+                                            </tree>
+                                            <form string="Container lines" version="7.0">
+                                                <group col="4">
+                                                    <field name="product_id" />
+                                                    <field name="seal_no" />
+                                                    <field name="price" />
+                                                </group>
+                                            </form>
+                                        </field>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record id="open_view_shipping_booking_list" model="ir.actions.act_window">
+            <field name="name">Booking</field>
+            <field name="res_model">shipping.booking</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="booking_search_form_view"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a Booking .
+              </p><p>
+                With just a quick glance on the OpenERP Booking  screen, you
+                can easily find all the information you need for each Booking Invoices;
+              </p>
+            </field>
+        </record>
+        
+        <menuitem action="open_view_shipping_booking_list" 
+        id="menu_view_shipping_booking_list" sequence="2" 
+        parent="menu_booking_main" />
+</data>
+</openerp>

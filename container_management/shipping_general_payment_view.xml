@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+	     <menuitem id="menu_payment_main" parent="menu_shipping_root" name="Payments" sequence="0"/>
+	     
+		<record id="view_shipping_general_payment_form" model="ir.ui.view">
+			<field name="name">shipping.general.payment.form</field>
+			<field name="model">shipping.general.payment</field>
+			<field name="type">form</field>
+		    <field name="arch" type="xml">
+				<form string="General Cash Payment" version="7.0">
+				    <header>
+			            <button name="button_cancel" states="draft" string="Cancel" type="object" confirm="Are you sure to Cancel this record?"/>
+			            <button name="print_report" states="draft,paid" string="Print" type="object"  />
+		        		<button name="button_validate_payment" states="draft" type="object" string="Paid" class="oe_highlight"/>
+                    	<field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,paid"/>
+                	</header>
+				    <sheet string="Cash Payment">
+			      		<group colspan="2" col="4">
+			      		    <group>
+						        <field name="doc_date" colspan="1" />
+						         <field name="origin" colspan="1" />
+						        <field name="journal_id" string="Journal" colspan="1" />
+						        <field name="company_id" string="Company" colspan="1" />
+						        <field name="amount_total" colspan="1" />
+						    </group>
+						    <group>
+						        <field name="period_id" string="Period" colspan="1"/>
+						         <field name="invoice" colspan="1" />
+						        <field name="ref" string="Reference" colspan="1" />
+    					        <field name="debit_account_id"  />
+						        <field name="credit_account_id"  />
+						    </group>
+					    </group>
+					    <notebook colspan="4">
+						    <page string="Cash Payment">
+							    <field name="cash_line_ids" colspan="4" nolabel="1" height="180">
+								    <tree string="Cash Lines" editable="bottom" version="7.0">									
+									    <field name="amount" sum="Total"/>
+									    <field name="currency_id" />
+								    </tree>
+							    </field>
+							    
+							    <group class="oe_subtotal_footer oe_right" colspan="2" name="paid_total">
+                                    <div class="oe_subtotal_footer_separator oe_inline">
+                                        <label for="paid_total" />
+                                    </div>
+                                    <field name="paid_total" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                </group>
+                                <div class="oe_clear"/>
+                                <field name="notes" class="oe_inline" placeholder="Terms and conditions..."/>
+                                
+						    </page>
+					    </notebook>
+				    </sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="view_shipping_general_payment_tree" model="ir.ui.view">
+			<field name="name">shipping.general.payment.tree</field>
+			<field name="model">shipping.general.payment</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Bank and Cash Payment" version="7.0" colors="blue:state == 'draft';gray:state == 'close';">					
+					<field name="ref"/>
+					<field name="journal_id"/>
+					<field name="partner_id"/>
+					<field name="period_id"/>
+					<field name="doc_date"/>
+					<field name="origin"/>
+					<field name="invoice"/>
+					<field name="state"/>
+				</tree>
+			</field>
+		</record>
+
+		<record id="view_shipping_general_payment_search" model="ir.ui.view">
+			<field name="name">shipping.general.payment.search</field>
+  			<field name="model">shipping.general.payment</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+	        	<search string="Search Advanced" version="7.0">
+                	<filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Advanced"/>
+                    <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Advanced"/>
+	                <separator orientation="vertical"/>
+	                <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted')]" groups="base.group_extended" help="To Review"/>
+	                <separator/>
+	                <field name="doc_date"/>
+				   	<group expand="0" string="Group By...">
+				    	<field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}"/>  
+						<filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+					</group>
+				</search>
+			</field>
+		</record>
+        
+		<record id="action_shipping_general_payment" model="ir.actions.act_window">
+			<field name="name">Shipping Cash Payment</field>
+			<field name="res_model">shipping.general.payment</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>			
+			<field name="view_id" eval="False"/>
+			<field name="search_view_id" ref="view_shipping_general_payment_search"/>
+			<field name="help" type="html">
+	              <p class="oe_view_nocontent_create">
+	                Click to add the Cash Payment.
+	              </p><p>
+	                OpenERP helps you easily track all activities related to
+	                Cash Payment.
+	              </p>
+            </field>	
+		</record>
+
+		<record id="action_shipping_general_payment_tree" model="ir.actions.act_window.view">
+	        <field eval="1" name="sequence"/>
+	        <field name="view_mode">tree</field>
+	        <field name="view_id" ref="view_shipping_general_payment_tree"/>
+	        <field name="act_window_id" ref="action_shipping_general_payment"/>
+		</record>
+
+		<record id="action_shipping_general_payment_form" model="ir.actions.act_window.view">
+	    	<field eval="2" name="sequence"/>
+	        <field name="view_mode">form</field>
+	        <field name="view_id" ref="view_shipping_general_payment_form"/>
+	        <field name="act_window_id" ref="action_shipping_general_payment"/>
+	    </record>
+
+		<menuitem 
+		id="menu_shipping_payment" 
+		name="Shippping Payment" 
+		parent="menu_shipping_root" 
+		sequence="10"/>
+		
+		<menuitem id="menu_shipping_general_payment" 
+		name="Shippping Cash Payment" 
+		parent="menu_shipping_payment" 
+		action="action_shipping_general_payment" sequence="10"/>
+
+	</data>
+</openerp>

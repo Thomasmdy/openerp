@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="export_bl" language="groovy" pageWidth="555" pageHeight="822" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="8d596d14-bdbd-4787-9236-e259b223fc93">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="345"/>
+	<parameter name="shipper" class="java.lang.String"/>
+	<parameter name="consignee" class="java.lang.String"/>
+	<parameter name="notifyparty" class="java.lang.String"/>
+	<parameter name="receipt_place" class="java.lang.String"/>
+	<parameter name="vassel" class="java.lang.String"/>
+	<parameter name="invoyage_no" class="java.lang.String"/>
+	<parameter name="pol" class="java.lang.String"/>
+	<parameter name="pod" class="java.lang.String"/>
+	<parameter name="delivery_port" class="java.lang.String"/>
+	<parameter name="shipped_date" class="java.lang.String"/>
+	<parameter name="bl_no" class="java.lang.String"/>
+	<parameter name="por" class="java.lang.String"/>
+	<parameter name="destination" class="java.lang.String"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/home/hms/businessauto/modules_internal7/container_management/report/"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select name from shipping_bl_order_line where id=1]]>
+	</queryString>
+	<field name="name" class="java.lang.String"/>
+	<title>
+		<band height="318" splitType="Stretch">
+			<textField>
+				<reportElement uuid="732d18b8-aa84-409d-8232-b55d107feb35" x="432" y="18" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{bl_no}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="2166bf2c-b437-44d1-bf91-67049ce06ba4" x="0" y="7" width="285" height="68"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{shipper}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="5c4dfd14-af36-477e-9cc9-942abdeb9cff" x="0" y="79" width="285" height="68"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{consignee}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="78c9aead-9df3-41b6-8896-22c1268ef066" x="0" y="152" width="285" height="68"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{notifyparty}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="5bde2bf4-10c3-48b0-8188-3ab4e831f9c9" x="227" y="223" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{por}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="1ca19fe7-3f4e-4241-b312-30da536f9436" x="227" y="262" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{pol}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b2aca7c5-4d0d-481b-859e-3b00994006f8" x="0" y="295" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{pod}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8da3c39c-8419-4f9c-b2f6-55a6ffc282b1" x="117" y="262" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{invoyage_no}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="f1832b35-2ce8-4bec-b6f7-4e8125e73127" x="0" y="262" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{vassel}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="d7ffdb7a-ef8a-4924-8c81-109fa8f0a478" x="227" y="295" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{delivery_port}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="0cc0c0e7-5c11-4217-9aea-6d03644a9cd0" x="455" y="295" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{destination}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="173" splitType="Stretch">
+			<subreport>
+				<reportElement uuid="99654215-8ab6-4987-8a6f-3dccfb38ab18" x="0" y="0" width="555" height="41"/>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "export_bl_cargo_subreport.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement uuid="ec3933ad-e081-45a4-82bc-4c7d25dfa886" x="0" y="41" width="555" height="64"/>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "export_bl_container_subreport.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<summary>
+		<band height="75">
+			<subreport>
+				<reportElement uuid="c6c9802e-61c6-4bb3-8612-819a5b9c161b" x="0" y="4" width="555" height="46"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "export_bl_freight_subreport.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</summary>
+</jasperReport>

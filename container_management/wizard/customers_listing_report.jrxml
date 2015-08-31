@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="suppliers_listing_report" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="child" class="java.lang.String"/>
+	<parameter name="company" class="java.lang.String"/>
+	<parameter name="date" class="java.lang.String"/>
+	<queryString language="xPath">
+		<![CDATA[/data/record]]>
+	</queryString>
+	<field name="City-city" class="java.lang.String">
+		<fieldDescription><![CDATA[City-city]]></fieldDescription>
+	</field>
+	<field name="Company-company_id" class="java.lang.String">
+		<fieldDescription><![CDATA[Company-company_id]]></fieldDescription>
+	</field>
+	<field name="Country-country" class="java.lang.String">
+		<fieldDescription><![CDATA[Country-country]]></fieldDescription>
+	</field>
+	<field name="Email-email" class="java.lang.String">
+		<fieldDescription><![CDATA[Email-email]]></fieldDescription>
+	</field>
+	<field name="Fax-fax" class="java.lang.String">
+		<fieldDescription><![CDATA[Fax-fax]]></fieldDescription>
+	</field>
+	<field name="Mobile-mobile" class="java.lang.String">
+		<fieldDescription><![CDATA[Mobile-mobile]]></fieldDescription>
+	</field>
+	<field name="Name-name" class="java.lang.String">
+		<fieldDescription><![CDATA[Name-name]]></fieldDescription>
+	</field>
+	<field name="Phone-phone" class="java.lang.String">
+		<fieldDescription><![CDATA[Phone-phone]]></fieldDescription>
+	</field>
+	<field name="Reference-ref" class="java.lang.String">
+		<fieldDescription><![CDATA[Reference-ref]]></fieldDescription>
+	</field>
+	<field name="Street-street" class="java.lang.String">
+		<fieldDescription><![CDATA[Street-street]]></fieldDescription>
+	</field>
+	<field name="Address_Type-type" class="java.lang.String">
+		<fieldDescription><![CDATA[Address_Type-type]]></fieldDescription>
+	</field>
+	<field name="Zip-zip" class="java.lang.String">
+		<fieldDescription><![CDATA[Zip-zip]]></fieldDescription>
+	</field>
+	<field name="Street2-street2" class="java.lang.String">
+		<fieldDescription><![CDATA[Street2-street2]]></fieldDescription>
+	</field>
+	<field name="State-state_id" class="java.lang.String">
+		<fieldDescription><![CDATA[State-state_id]]></fieldDescription>
+	</field>
+	<field name="Website-website" class="java.lang.String">
+		<fieldDescription><![CDATA[Website-website]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="80" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Suppliers Listing]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="20" width="555" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$P{company}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="40" width="555" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$P{date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="305" y="59" width="250" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Inclusive of Child :"+$P{child}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="29" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="4" width="63" height="20"/>
+				<textElement textAlignment="Left">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[No.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="63" y="4" width="96" height="20"/>
+				<textElement textAlignment="Left">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="159" y="4" width="146" height="20"/>
+				<textElement textAlignment="Left">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Address]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="305" y="4" width="250" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Contact Information]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="26" width="555" height="1"/>
+			</line>
+			<line>
+				<reportElement x="0" y="28" width="555" height="1"/>
+			</line>
+			<line>
+				<reportElement x="0" y="2" width="555" height="1"/>
+			</line>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="59" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="2" width="63" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{Reference-ref}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="63" y="2" width="96" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{Name-name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="159" y="2" width="146" height="55"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{Street-street}+$F{Street2-street2}+"\n"+
+$F{City-city}+","+$F{State-state_id}+","+$F{Zip-zip}+"\n"+
+$F{Country-country}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="305" y="2" width="124" height="55"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Phone : "+$F{Phone-phone}+"\n"+
+"Mobile :"+$F{Mobile-mobile}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="57" width="555" height="1"/>
+			</line>
+			<textField>
+				<reportElement x="429" y="2" width="126" height="55"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Fax : "+$F{Fax-fax}+"\n"+
+"Email :"+$F{Email-email}+"\n"+
+"Website : "+$F{Website-website}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

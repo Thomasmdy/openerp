@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="inward_commission" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="834" leftMargin="4" rightMargin="4" topMargin="17" bottomMargin="14" uuid="81cd4fb4-fe07-4ccb-99da-90bab1c91da7">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="554"/>
+	<property name="ireport.y" value="123"/>
+	<parameter name="recordno" class="java.lang.Object">
+		<defaultValueExpression><![CDATA["201406300001"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="company_name" class="java.lang.String">
+		<defaultValueExpression><![CDATA["DZ CONTAINER SERVICES CO., LTD."]]></defaultValueExpression>
+	</parameter>
+	<parameter name="address" class="java.lang.String">
+		<defaultValueExpression><![CDATA["NO.446, 7FL, Merchant Road, Yangon, Myanmar"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="tel_fax" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Tel/Fax: 951-240622,240511, 392200, 392300."]]></defaultValueExpression>
+	</parameter>
+	<parameter name="date" class="java.lang.String">
+		<defaultValueExpression><![CDATA["30-JUNE-2014"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="cost_month" class="java.lang.String">
+		<defaultValueExpression><![CDATA["06-2014"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="messers" class="java.lang.String"/>
+	<parameter name="int_cost_month" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<parameter name="int_cost_year" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[2015]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select bol.vassel_id, sv.name as vassel_name,bol.in_voyage_no, bol.first_vassel_id, sv1.name as first_vassel, bol.first_in_voyage_no, bol.etb
+, sf.bl_no,  '201220010'::char(20) as record_no, bol.bl_date,sp.code as port_code,sf.* from (
+----Freight And QTY start
+select sf.ship_line_id, sf.freight_total , sf.shipper, sf.port_of_loading_id, sf.vassel_id ,sf.bl_no, sf.type, sfl.* from shipping_freight sf
+left join
+(
+-----freight QTY and rate Start-----
+select qty_res.*, rate_res.f20, rate_res.f40 from (
+select freight_id, sum(p20) as p20, sum(p40) as p40 from (
+select freight_id, sum(quantity) as p20 , 0 as p40 from shipping_freight_line
+where per='P20' and freight_id is not null
+group by freight_id
+union
+select  freight_id,0 as p20, sum(quantity) as p40 from shipping_freight_line
+where per='P40'
+and freight_id is not null
+ group by freight_id
+ ) qty
+group by freight_id
+) qty_res left join
+ (select freight_id, sum(f20) as f20, sum(f40) as f40 from (
+select freight_id, sum(net_amount) as f20 , 0 as f40 from shipping_freight_line
+where per='P20' and freight_id is not null
+group by freight_id
+union
+select  freight_id,0 as f20, sum(net_amount) as f40 from shipping_freight_line
+where per='P40'
+and freight_id is not null
+ group by freight_id
+) rate group by freight_id
+) rate_res on qty_res.freight_id = rate_res.freight_id
+
+-----freight QTY and rate End -----
+
+) sfl on sf.id = sfl.freight_id
+
+----Freight And QTY End
+) sf
+left  join shipping_bl_order_line bol on bol.id = sf.ship_line_id
+left join shipping_vassel sv on bol.vassel_id= sv.id
+left join shipping_vassel sv1 on bol.first_vassel_id = sv1.id
+left join shipping_port sp on bol.port_of_loading_id = sp.id
+where bol.type !='export' and bol.state not in ('cancel','draft')
+and extract(month from bol.bl_date) =$P{int_cost_month} and extract(year from bol.bl_date) =$P{int_cost_year}]]>
+	</queryString>
+	<field name="vassel_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Vassel Name]]></fieldDescription>
+	</field>
+	<field name="vassel_name" class="java.lang.String"/>
+	<field name="in_voyage_no" class="java.lang.String">
+		<fieldDescription><![CDATA[IN Voyage No]]></fieldDescription>
+	</field>
+	<field name="first_vassel_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Pre-Carriage]]></fieldDescription>
+	</field>
+	<field name="first_vassel" class="java.lang.String"/>
+	<field name="first_in_voyage_no" class="java.lang.String">
+		<fieldDescription><![CDATA[First IN Voyage No]]></fieldDescription>
+	</field>
+	<field name="etb" class="java.sql.Date">
+		<fieldDescription><![CDATA[ETB YGN]]></fieldDescription>
+	</field>
+	<field name="bl_no" class="java.lang.String">
+		<fieldDescription><![CDATA[BL Name]]></fieldDescription>
+	</field>
+	<field name="record_no" class="java.lang.String"/>
+	<field name="bl_date" class="java.sql.Date">
+		<fieldDescription><![CDATA[BL Date]]></fieldDescription>
+	</field>
+	<field name="port_code" class="java.lang.String"/>
+	<field name="ship_line_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[BL Order Line]]></fieldDescription>
+	</field>
+	<field name="freight_total" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[Freight Total]]></fieldDescription>
+	</field>
+	<field name="shipper" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Shipper]]></fieldDescription>
+	</field>
+	<field name="port_of_loading_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Port of Loading]]></fieldDescription>
+	</field>
+	<field name="type" class="java.lang.String">
+		<fieldDescription><![CDATA[Internal Type]]></fieldDescription>
+	</field>
+	<field name="freight_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Freight]]></fieldDescription>
+	</field>
+	<field name="p20" class="java.math.BigDecimal"/>
+	<field name="p40" class="java.math.BigDecimal"/>
+	<field name="f20" class="java.math.BigDecimal"/>
+	<field name="f40" class="java.math.BigDecimal"/>
+	<variable name="net_freight" class="java.lang.String">
+		<variableExpression><![CDATA[$F{f20} + $F{f40}]]></variableExpression>
+	</variable>
+	<variable name="in_ward" class="java.lang.String">
+		<variableExpression><![CDATA[( $F{f20} + $F{f40}) * 0.025]]></variableExpression>
+	</variable>
+	<variable name="hc_amount" class="java.lang.String">
+		<variableExpression><![CDATA[($F{p20} + $F{p40}) * 5.0]]></variableExpression>
+	</variable>
+	<title>
+		<band height="169" splitType="Stretch">
+			<textField>
+				<reportElement uuid="0d271ea6-e80e-4936-855a-4cdc56cdbd3d" x="0" y="0" width="802" height="43"/>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="19" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{company_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="bf9861fa-c580-4cf4-b044-d460d0a82184" x="1" y="20" width="802" height="43"/>
+				<textElement textAlignment="Center">
+					<font fontName="Kinnari" size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{address}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b4eb7bb0-4e6c-459f-bf5a-43b245c20e10" x="1" y="39" width="802" height="43"/>
+				<textElement textAlignment="Center">
+					<font fontName="Kinnari" size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{tel_fax}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e99b2f7f-720c-4974-ae9c-fa65fcbf64d1" x="1" y="82" width="209" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["DATE:     " + $P{date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="0409022a-87d9-42d4-991c-010ce4b455b3" x="1" y="103" width="204" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["COST MONTH: " + $P{cost_month}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="ef48725a-1bc2-47e2-bf71-8bff7bf2e95e" x="1" y="124" width="372" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Serif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MESSERS: "KAWASAKI KISEN KAISHA LTD c/o KSP"]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="1231086e-51ea-4ab1-8c66-6b7de5ce45b9" x="1" y="145" width="372" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Serif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SUBJECT: Statement of KKLU Inward Commission]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="33" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="d3c8dee7-5dc6-4b45-ae4a-866f1dcccec4" x="95" y="0" width="60" height="31"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[B/L No.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="48d14fc4-8b7d-4218-b220-42b1f002fbfc" x="3" y="0" width="25" height="31"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[No.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="0c05e61c-fa09-4028-8cdd-74cbedf21f4d" x="30" y="1" width="63" height="30"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Record No]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="74cf897f-1e23-4775-b4b9-7aaff93a5f23" x="161" y="0" width="44" height="31"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[B/L Date]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="45436621-f5bb-4769-8f0e-c6ea61500344" x="0" y="-2" width="833" height="1"/>
+			</line>
+			<staticText>
+				<reportElement uuid="97a3a050-8ec1-4f8c-ae18-0f851e6fd1e0" x="206" y="1" width="84" height="30"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[First Carrier]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4b447d60-782e-41c8-bfe0-753832f57680" x="291" y="1" width="40" height="30"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Voy.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2d51272d-e41c-4638-b525-58b990debe5f" x="332" y="1" width="78" height="30"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Second Carrier]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ac5a29ce-4499-4deb-9d78-959576991199" x="410" y="1" width="39" height="30"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Voy.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4640a949-616d-4124-a9d6-67bfaf2e2d11" x="449" y="0" width="61" height="31"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[ETA MMRGN
+YYY/MM/DD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="95443a1e-c7cf-457a-9930-6d092fa6f120" x="509" y="1" width="75" height="19"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Quantity]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="62098b07-6f04-4419-a9dc-3e5dd0b8e3cc" x="509" y="18" width="25" height="13"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="115fd2b1-0310-426b-a973-80fc5d6adb65" x="534" y="18" width="25" height="13"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[20']]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="7d029fc8-6fa3-4c42-b764-91b7e9ffb985" x="559" y="18" width="25" height="13"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[40']]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b1036f76-c56b-4d76-94a3-910661bc3b97" x="584" y="0" width="56" height="32"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Load Port]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="17257a68-2921-40fd-a02e-c36607ac5ae2" x="665" y="16" width="31" height="13"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[20']]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="943d3892-a038-4d41-b677-cf991601295b" x="696" y="16" width="29" height="13"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[40']]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9385fd31-878a-490c-8148-eab7a8b43062" x="640" y="-1" width="85" height="19"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Freight Rate]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2205d515-9535-40c7-be9c-080aa206de7a" x="640" y="16" width="25" height="13"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9d57b3cc-249c-4be5-88d3-fd984cca4e83" x="725" y="1" width="42" height="30"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Net Freight]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="1f78af27-c4ed-49b8-b97f-fe150eaf5641" x="766" y="1" width="35" height="30"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[In
+72412]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="bc8d03d9-f51b-48da-a998-9eedb23a3984" x="801" y="1" width="35" height="30"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[HC
+72292]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="2b4d21c9-c445-4282-bda3-052465407cf5" x="640" y="15" width="85" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="577d9c63-a9c7-4c26-856f-121413110d59" x="510" y="16" width="74" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="566aab92-6f97-43c1-9ce3-050693a22de3" x="1" y="31" width="832" height="1"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="24" splitType="Stretch">
+			<line>
+				<reportElement uuid="a2d6b277-a2a6-4b8a-93b4-f55a91b4d8e3" x="0" y="20" width="833" height="1"/>
+			</line>
+			<textField>
+				<reportElement uuid="0f87ea89-4184-456f-91d7-88f2bcaedd40" x="95" y="1" width="64" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{bl_no}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="2e21f678-a40b-4d7e-b072-a9b4d84c7588" x="0" y="1" width="25" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="3a7309cd-7453-47d0-940d-27fa40a5d617" x="30" y="1" width="63" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{record_no}]]></textFieldExpression>
+			</textField>
+			<line direction="BottomUp">
+				<reportElement uuid="a0c0677e-ede7-4a22-b8d6-b03f6c2c9b51" x="0" y="-34" width="1" height="54"/>
+			</line>
+			<line direction="BottomUp">
+				<reportElement uuid="ac75e58a-0015-49a2-8826-e374e358d24f" x="28" y="-34" width="1" height="55"/>
+			</line>
+			<textField pattern="yyyy/MM/dd">
+				<reportElement uuid="2f83157c-0cb6-48ea-b9f7-39c93330ab59" x="160" y="1" width="66" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{bl_date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="ff7b45b3-a7b8-4794-9fa4-8e5147e005df" x="206" y="1" width="84" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{first_vassel}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="2fe14d46-f705-4e4e-bbe8-5153d49d2c5a" x="290" y="1" width="42" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{first_in_voyage_no}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e29c4777-72ed-4eed-9a07-1fb6f35738e8" x="331" y="1" width="79" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{vassel_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="6f25574d-3b03-48c5-b68e-17c32fe119e8" x="410" y="3" width="39" height="16"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{in_voyage_no}]]></textFieldExpression>
+			</textField>
+			<textField pattern="yyyy/MM/dd">
+				<reportElement uuid="ff3386a0-5df2-4830-8a5e-86f58bed55ca" x="449" y="2" width="60" height="18"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{etb}]]></textFieldExpression>
+			</textField>
+			<line direction="BottomUp">
+				<reportElement uuid="7de62d11-468f-4226-9c65-1855adae516b" x="833" y="-35" width="1" height="55"/>
+			</line>
+			<textField>
+				<reportElement uuid="4b1826bf-e337-4917-ae98-0419de76b308" x="510" y="1" width="24" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{type}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="40a51e81-580f-4f37-805f-c75521d14f2f" x="534" y="1" width="20" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{p20}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="d1f5bff2-99f4-481f-8c2a-47604f1a4642" x="559" y="1" width="20" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{p40}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8cc92538-bb2b-474d-9b3f-904153ac70c2" x="642" y="1" width="23" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{type}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="58f18af5-f533-4100-b12b-23f23a5d0d8f" x="665" y="1" width="28" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{f20}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="1a667b91-4143-41fe-9a9c-45afe858848d" x="696" y="1" width="27" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{f40}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="02eb7acf-c7ba-4ce7-b0eb-e01b95ecb676" x="725" y="1" width="42" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{net_freight}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="3da2316f-dfcf-411c-a30c-a186092dda48" x="767" y="1" width="35" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{in_ward}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="dcc2769d-04bc-457b-987d-93e1da50498e" x="803" y="1" width="30" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{hc_amount}]]></textFieldExpression>
+			</textField>
+			<line direction="BottomUp">
+				<reportElement uuid="5bc060e1-835e-40ec-baea-b6a0304b2648" x="767" y="-34" width="1" height="55"/>
+			</line>
+			<line>
+				<reportElement uuid="1b01b26a-6d4f-4dbd-a7e3-a9973a0eb65c" x="802" y="-34" width="1" height="55"/>
+			</line>
+			<line>
+				<reportElement uuid="4a583ad5-fd1b-47f7-9428-50aae5f9a4cf" x="725" y="-34" width="1" height="55"/>
+			</line>
+			<line>
+				<reportElement uuid="433815b0-d8ea-4520-b6d1-213ec79cdcde" x="696" y="-17" width="1" height="38"/>
+			</line>
+			<line>
+				<reportElement uuid="ee957170-9ccb-4a95-92fc-ad78ed50e66e" x="665" y="-18" width="1" height="38"/>
+			</line>
+			<line>
+				<reportElement uuid="08449505-9b3f-45e9-96cf-5135bfe9f846" x="640" y="-34" width="1" height="55"/>
+			</line>
+			<line>
+				<reportElement uuid="356adeed-4b28-45bb-aa50-f132d1aed365" x="584" y="-35" width="1" height="55"/>
+			</line>
+			<line>
+				<reportElement uuid="7eb0de01-2533-4188-b2df-26cb5f31251a" x="509" y="-35" width="1" height="56"/>
+			</line>
+			<line>
+				<reportElement uuid="611d0042-35bb-470f-a82e-47b3a2d3af85" x="559" y="-16" width="1" height="37"/>
+			</line>
+			<line>
+				<reportElement uuid="beef83c6-f0b3-49a6-8e03-68b38b083ac9" x="534" y="-16" width="1" height="37"/>
+			</line>
+			<line>
+				<reportElement uuid="a05d0451-e586-42eb-8078-20a6e8a7e449" x="449" y="-34" width="1" height="55"/>
+			</line>
+			<line>
+				<reportElement uuid="94a2eee2-2729-4e85-8b74-fda40e956935" x="410" y="-34" width="1" height="55"/>
+			</line>
+			<line>
+				<reportElement uuid="cae7cdc7-5894-4002-8f5d-f47fbac0c8d0" x="332" y="-34" width="1" height="55"/>
+			</line>
+			<line>
+				<reportElement uuid="7fcd2596-6287-4506-a632-a3f00e86029a" x="290" y="-34" width="1" height="54"/>
+			</line>
+			<line>
+				<reportElement uuid="9183b206-35b3-4284-bcc5-281d3dc9826b" x="205" y="-34" width="1" height="55"/>
+			</line>
+			<line>
+				<reportElement uuid="838d0fa7-cc66-4982-81e1-18ca33cd7832" x="159" y="-34" width="1" height="54"/>
+			</line>
+			<line>
+				<reportElement uuid="c64ff2b2-ff05-4a48-9f3f-0a4043692f03" x="93" y="-34" width="1" height="54"/>
+			</line>
+			<textField>
+				<reportElement uuid="6fbb8af0-cee2-4b6f-a4b5-baedbc2c9f2c" x="585" y="1" width="55" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{port_code}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="46" splitType="Stretch"/>
+	</columnFooter>
+</jasperReport>

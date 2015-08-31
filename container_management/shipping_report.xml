@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+    <report  id="po_request" model="freight.invoice" name="po.request"
+    rml="container_management/report/po_requset.jrxml"  string="PO Request" menu="False"/>
+
+    <report  id="po_request_xls" model="freight.invoice" name="po.request.xls"
+    rml="container_management/report/po_requset_xls.jrxml"  string="PO Request" menu="False"/>
+
+    <report  id="inward_commission" model="freight.invoice" name="inward.commission"
+    rml="container_management/report/inward_commission.jrxml"  string="InWard Commission" menu="False"/>
+
+    <report  id="outward_commission_kkk" model="freight.invoice" name="outward.commission.kkk"
+    rml="container_management/report/outward_commission_kkk.jrxml"  string="OutWard Commission KKK" menu="False"/>
+    
+    <report  id="outward_commission_klis" model="freight.invoice" name="outward.commission.klis"
+    rml="container_management/report/outward_commission_klis.jrxml"  string="OutWard Commission KKLU" menu="False"/>
+
+    <report  id="release_order" model="shipping.bl_order.line" name="release.order"
+    rml="container_management/report/release_order_sql.jrxml" string="Release Order" menu="False" />
+
+    <report  id="ro_receipt_invoice" model="shipping.release.order" name="ro.receipt.invoice"
+    rml="container_management/report/ro_receipt_invoice.jrxml" string="Release Order Invoice" menu="False" />
+    
+    <report  id="amm_receipt_invoice" model="shipping.bl_order.line.amendment" name="amm.receipt.invoice"
+    rml="container_management/report/amm_receipt_invoice.jrxml" string="Ammendment Receipt" menu="False" />
+    
+    <report  id="export_bl_data" model="shipping.bl_order.line" name="export.bl.data"
+    rml="container_management/report/export_bl.jrxml" string=" "  menu="False" />
+    
+    <report  id="export_container_attached" model="shipping.bl_order.line" name="export.container.attached"
+    rml="container_management/report/export_container_attached.jrxml" string=" "  menu="False" />
+    
+    <report  id="detention_receipt" model="detention.receipt" name="detention.receipt"
+    rml="container_management/report/detention_receipt.jrxml" string=" "  menu="False" />
+    
+    <report  id="detention_receipt_invoice" model="detention.receipt" name="detention.receipt.invoice"
+    rml="container_management/report/detention_receipt_invoice.jrxml" string=" "  menu="False" />
+    
+    <report  id="shipping_booking_report" model="shipping.booking" name="booking.report"
+    rml="container_management/report/booking_report.jrxml" string=" "  menu="False" />
+    
+    <report  id="shipping_booking_attached_report" model="shipping.booking" name="booking.report.attached"
+    rml="container_management/report/booking_report_attached.jrxml" string=" "  menu="False" />
+    
+    <report  id="shipping_general_receipt_invoice_report" model="shipping.booking" name="general.receipt.invoice"
+    rml="container_management/report/general_receipt_invoice.jrxml" string=" "  menu="False" />
+    
+    <!-- SOA start -->    
+    <report  id="freight_soa_dynamic_report" model="shipping.freight" name="freight.soa.dynamic"
+    rml="container_management/report/freight_soa_dynamic.jrxml" string=" "  menu="False" />
+    
+    <report  id="freight_soa_jcd_report" model="shipping.freight" name="freight.soa.jcd"
+    rml="container_management/report/freight_soa_jcd.jrxml" string=" "  menu="False" />
+
+    <report  id="freight_soa_csl_report" model="shipping.freight" name="freight.soa.csl"
+    rml="container_management/report/freight_soa_csl.jrxml" string=" "  menu="False" />
+
+    <report  id="freight_soa_report" model="shipping.freight" name="freight.soa"
+    rml="container_management/report/freight_soa.jrxml" string=" "  menu="False" />
+    
+    <!-- SOA start END -->    
+    </data>
+    
+</openerp>

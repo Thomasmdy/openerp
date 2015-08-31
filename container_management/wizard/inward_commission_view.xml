@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_inward_commission" model="ir.ui.view">
+            <field name="name">inward.commission.form</field>
+            <field name="model">inward.commission</field>
+            <field name="type">form</field>  
+            <field name="arch" type="xml">
+             <form string="Inward Commission" version="7.0">
+                <group>
+                 	<field name="date" />
+                 	<field name="output_type" />
+             	</group>
+                <footer>
+                    <button name="print_report" string="Print" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+            </field>
+        </record>
+
+        <record id="action_inward_commission" model="ir.actions.act_window">
+            <field name="name">Inward Commission Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">inward.commission</field>
+            <field name="target">new</field>
+         </record>
+            
+		 <menuitem action="action_inward_commission" id="menu_inward_commission" 
+        	parent="menu_shipping_reporting" />
+    </data>
+</openerp>

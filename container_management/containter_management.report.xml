@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+		<!--acount invoice report -->
+		<report  id="release_order" model="shipping.bl_order.line" name="release.order"
+            rml="container_management/report/release_order_report.jrxml" string=" "  />
+    </data>
+</openerp>   
+

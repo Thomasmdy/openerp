@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_shipping_detention_line,access_shipping_detention_line,model_shipping_detention_line,,1,1,1,1
+access_container_detention_transaction,access_container_detention_transaction,model_container_detention_transaction,,1,1,1,1
+access_payment_move_line,access_payment_move_line,model_payment_move_line,,1,1,1,1
+access_po_request_view,access_po_request_view,model_po_request_view,,1,1,1,1
+access_po_request,access_po_request,model_po_request,,1,1,1,1
+access_blno_blorder_rel,access_blno_blorder_rel,model_blno_blorder_rel,,1,1,1,1
+access_account_mapping,access_account_mapping,model_account_mapping,,1,1,1,1
+access_cheque_move_line_payment_receive,access_cheque_move_line_payment_receive,model_cheque_move_line_payment_receive,,1,1,1,1

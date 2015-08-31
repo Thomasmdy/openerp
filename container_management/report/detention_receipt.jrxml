@@ -1,0 +1,606 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="detention_receipt" language="groovy" pageWidth="1008" pageHeight="612" orientation="Landscape" columnWidth="993" leftMargin="10" rightMargin="5" topMargin="20" bottomMargin="20" uuid="e0407265-4460-4471-95dc-bfc2ed8f42d0">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="cost_month" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["06-2014"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="address" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["NO.446, 7FL, Merchant Road, Yangon, Myanmar"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="messers" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="company_name" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["DZ CONTAINER SERVICES CO., LTD."]]></defaultValueExpression>
+	</parameter>
+	<parameter name="access_code" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["69201"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="exchange_rate" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[1000]]></defaultValueExpression>
+	</parameter>
+	<parameter name="date_from" class="java.lang.String">
+		<defaultValueExpression><![CDATA['2015-01-01']]></defaultValueExpression>
+	</parameter>
+	<parameter name="date_to" class="java.lang.String">
+		<defaultValueExpression><![CDATA['2015-01-31']]></defaultValueExpression>
+	</parameter>
+	<parameter name="date" class="java.lang.String" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[select ma.*, mc.c_type, coalesce(fr.amount_total,0.0) amount_total, fr.date_from, fr.date_to, coalesce(sc.amount_total,0.0) amount_total2, sc.date_from date_from2, sc.date_to date_to2,
+coalesce(th.amount_total,0.0) amount_total3, th.date_from date_from3 , th.date_to date_to3,
+coalesce(fr.day_count,0) + coalesce(sc.day_count,0)+ coalesce(th.day_count,0) day_count from
+(
+select rec.container, rec.bl_no, rec.receipt_id, bl.bl_no, bl.in_voyage_no, bl.vassel_name,bl.etb from
+(
+select ctn.container, ctn.receipt_id, dcr.bl_no from
+(
+select container, receipt_id from (
+   select container,receipt_id, row_number() over (partition by container order by receipt_id) as row_number
+   from detention_charge_receipt_line
+   WHERE (date_from >=$P{date_from}::timestamp::date and date_to <= $P{date_to}::timestamp::date)
+   ) as rows
+where row_number = 1
+) ctn
+left join
+(
+select bl_no, id from detention_charge_receipt
+) dcr on ctn.receipt_id = dcr.id
+) rec
+LEFT OUTER JOIN
+(
+select bl.*, vs.name vassel_name from
+(select bl_no, vassel_id, in_voyage_no,etb from shipping_bl_order_line) bl
+left join shipping_vassel vs on bl.vassel_id = vs.id
+) bl on rec.bl_no= bl.bl_no
+group by rec.container, rec.bl_no, rec.receipt_id, bl.bl_no, bl.bl_no, bl.in_voyage_no, bl.vassel_name, bl.etb
+
+ )
+ma LEFT JOIN
+(
+select amt.container,amt.amount_total, amt.period_type, dte.date_from, dte.date_to, dte.date_to- dte.date_from +1 day_count from
+--Container and amount
+(select container, period_type, sum(amount_total) as amount_total
+from detention_charge_receipt_line
+where period_type='first' and (date_from >=$P{date_from}::timestamp::date and date_to <= $P{date_to}::timestamp::date)
+group by container, period_type
+) amt
+inner join
+--Container and date
+(select container, period_type, min(date_from) as date_from, max(date_to) as date_to
+from detention_charge_receipt_line
+where period_type='first' and (date_from >=$P{date_from}::timestamp::date and date_to <= $P{date_to}::timestamp::date)
+group by container, period_type
+) dte
+on amt.container= dte.container and amt.period_type = dte.period_type
+) fr on ma.container= fr.container LEFT JOIN
+(
+select amt.container,amt.amount_total, amt.period_type, dte.date_from, dte.date_to, dte.date_to- dte.date_from +1 day_count from
+--Container and amount
+(select container, period_type, sum(amount_total) as amount_total
+from detention_charge_receipt_line
+where period_type='second' and (date_from >=$P{date_from}::timestamp::date and date_to <= $P{date_to}::timestamp::date)
+group by container, period_type
+) amt
+inner join
+--Container and date
+(select container, period_type, min(date_from) as date_from, max(date_to) as date_to
+from detention_charge_receipt_line
+where period_type='second' and (date_from >=$P{date_from}::timestamp::date and date_to <= $P{date_to}::timestamp::date)
+group by container, period_type
+) dte
+on amt.container= dte.container and amt.period_type = dte.period_type
+) sc on ma.container= sc.container LEFT JOIN
+(
+select amt.container,amt.amount_total, amt.period_type, dte.date_from, dte.date_to, dte.date_to- dte.date_from +1 day_count from
+--Container and amount
+(select container, period_type, sum(amount_total) as amount_total
+from detention_charge_receipt_line
+where period_type='third' and (date_from >=$P{date_from}::timestamp::date and date_to <= $P{date_to}::timestamp::date)
+group by container, period_type
+) amt
+inner join
+--Container and date
+(select container, period_type, min(date_from) as date_from, max(date_to) as date_to
+from detention_charge_receipt_line
+where period_type='third' and (date_from >=$P{date_from}::timestamp::date and date_to <= $P{date_to}::timestamp::date)
+group by container, period_type
+) dte
+on amt.container= dte.container and amt.period_type = dte.period_type
+) th on ma.container= th.container
+LEFT JOIN
+(
+select name, CASE WHEN high_cube THEN 'HC' WHEN feet_40 THEN '40' WHEN feet_20 THEN '20' END c_type from shipping_container
+) mc ON ma.container= mc.name]]>
+	</queryString>
+	<field name="container" class="java.lang.String">
+		<fieldDescription><![CDATA[Container]]></fieldDescription>
+	</field>
+	<field name="bl_no" class="java.lang.String">
+		<fieldDescription><![CDATA[BL Name]]></fieldDescription>
+	</field>
+	<field name="receipt_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Receipt]]></fieldDescription>
+	</field>
+	<field name="in_voyage_no" class="java.lang.String">
+		<fieldDescription><![CDATA[IN Voyage No]]></fieldDescription>
+	</field>
+	<field name="vassel_name" class="java.lang.String"/>
+	<field name="etb" class="java.sql.Date">
+		<fieldDescription><![CDATA[ETB YGN]]></fieldDescription>
+	</field>
+	<field name="c_type" class="java.lang.String"/>
+	<field name="amount_total" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[Total]]></fieldDescription>
+	</field>
+	<field name="date_from" class="java.sql.Date">
+		<fieldDescription><![CDATA[Start Date]]></fieldDescription>
+	</field>
+	<field name="date_to" class="java.sql.Date">
+		<fieldDescription><![CDATA[End Date]]></fieldDescription>
+	</field>
+	<field name="amount_total2" class="java.math.BigDecimal"/>
+	<field name="date_from2" class="java.sql.Date"/>
+	<field name="date_to2" class="java.sql.Date"/>
+	<field name="amount_total3" class="java.math.BigDecimal"/>
+	<field name="date_from3" class="java.sql.Date"/>
+	<field name="date_to3" class="java.sql.Date"/>
+	<field name="day_count" class="java.lang.Integer"/>
+	<variable name="amount_total" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$F{amount_total3} + $F{amount_total} + $F{amount_total2}]]></variableExpression>
+		<initialValueExpression><![CDATA[$F{amount_total3} + $F{amount_total} + $F{amount_total2}]]></initialValueExpression>
+	</variable>
+	<variable name="sum_of_amount_total" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$V{amount_total}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="usd_amount" class="java.lang.String">
+		<variableExpression><![CDATA[$V{sum_of_amount_total}/$P{exchange_rate}]]></variableExpression>
+		<initialValueExpression><![CDATA[$V{sum_of_amount_total}/$P{exchange_rate}]]></initialValueExpression>
+	</variable>
+	<variable name="line_no" class="java.lang.Integer" resetType="None" incrementType="Report" calculation="Count">
+		<initialValueExpression><![CDATA[1]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="104" splitType="Stretch">
+			<textField>
+				<reportElement uuid="2a2b1191-0e49-499c-9216-e8dd19510eb8" x="0" y="0" width="209" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Serif" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Cost Month:     " + $P{cost_month}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="a31ad688-db58-4517-9c1c-dc82d97a2faf" x="0" y="21" width="204" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Serif" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Acc Code: " + $P{access_code}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="86e3c639-cb8e-4f2f-9123-22774b422d40" x="0" y="63" width="372" height="20"/>
+				<textElement markup="none">
+					<font fontName="DejaVu Serif" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["SUBJECT: CREDIT for Detention Income"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="52693a1b-64b0-4ea9-a5c2-6450cc63bd04" x="0" y="84" width="372" height="20"/>
+				<textElement markup="none">
+					<font fontName="DejaVu Serif" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Reporting Agent " + $P{company_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="fca1b80b-a9b3-49fa-bbf8-09a72e2165ba" x="0" y="42" width="538" height="20"/>
+				<textElement markup="none">
+					<font fontName="DejaVu Serif" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["MESSERS: KAWASAKI KISEN KAISHA LTD c/o \"K\" LINE (SINGAPORE) PTE LTD"]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="45" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="20b64fce-6b08-4ff8-a121-0986e6f25992" x="57" y="2" width="72" height="40"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif"/>
+				</textElement>
+				<text><![CDATA[BL Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3b151f27-d067-4504-9184-0ad3f891aa6a" x="606" y="2" width="92" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif"/>
+				</textElement>
+				<text><![CDATA[1st PERIOD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="79a1decb-c488-4c14-8f4b-b2153782e754" x="698" y="2" width="92" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif"/>
+				</textElement>
+				<text><![CDATA[2nd Period]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="164c2d2e-c2fd-4654-8bea-314ca6f0d139" x="129" y="2" width="245" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif"/>
+				</textElement>
+				<text><![CDATA[Container]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="1c5a6c4e-b432-46ed-a5f1-a94e606f18d5" x="376" y="2" width="100" height="40"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif"/>
+				</textElement>
+				<text><![CDATA[Vassel]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ba21b608-4276-4625-96ed-cf18127edce9" x="477" y="2" width="61" height="40"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif"/>
+				</textElement>
+				<text><![CDATA[Voyage]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c67f1c6b-a385-41e6-b620-d04299a91d55" x="790" y="2" width="92" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif"/>
+				</textElement>
+				<text><![CDATA[3nd Period]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a99b261e-6fb3-4afe-be13-0f3f4b43818b" x="884" y="1" width="25" height="41"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif"/>
+				</textElement>
+				<text><![CDATA[NO Days]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c056ccc5-1c76-4172-9c0e-38da6d469c09" x="909" y="2" width="84" height="41"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif"/>
+				</textElement>
+				<text><![CDATA[Total MMK Kyates]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="57fda767-0bb4-4f41-9265-0a3d83d4e180" x="129" y="22" width="83" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif"/>
+				</textElement>
+				<text><![CDATA[20]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="760c1666-9e80-47fe-a80c-671e2e7a119a" x="212" y="22" width="82" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif"/>
+				</textElement>
+				<text><![CDATA[40]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="0df019c3-4130-405d-a827-261063c2c03a" x="295" y="23" width="79" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif"/>
+				</textElement>
+				<text><![CDATA[40HC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f91aba6f-13cb-4e77-bf89-52858a88db2f" x="606" y="22" width="46" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif"/>
+				</textElement>
+				<text><![CDATA[From]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f9163e3d-4fa1-4fe8-8635-f59b6bb2f0c7" x="652" y="22" width="46" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif"/>
+				</textElement>
+				<text><![CDATA[Upto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5196d421-8af0-4a9a-886a-05d960ab8b4f" x="698" y="22" width="46" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif"/>
+				</textElement>
+				<text><![CDATA[From]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="27af1610-54fd-4b9f-aa8b-24edbf80640d" x="744" y="22" width="46" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif"/>
+				</textElement>
+				<text><![CDATA[Upto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="186c77b0-2832-44eb-9137-0ac200487752" x="836" y="22" width="46" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif"/>
+				</textElement>
+				<text><![CDATA[Upto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2cb6e62d-728f-41c8-b56d-a2e59e51c495" x="790" y="22" width="46" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif"/>
+				</textElement>
+				<text><![CDATA[From]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="740c49de-2bc0-4d20-b127-de1e14d75bfe" x="0" y="2" width="993" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="3eae7136-3761-4b2d-aa20-bcf355658d75" x="0" y="44" width="993" height="1"/>
+			</line>
+			<staticText>
+				<reportElement uuid="31f9136b-d32b-4573-b4f0-25415cfba9a9" x="538" y="3" width="68" height="39"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif"/>
+				</textElement>
+				<text><![CDATA[Terminal   Dis Date]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="51bcb245-8a54-4429-953c-29d182aa4387" x="129" y="21" width="245" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="84daddb1-f9cb-4100-83a6-65ad41a3ded7" x="606" y="20" width="276" height="1"/>
+			</line>
+			<elementGroup/>
+			<staticText>
+				<reportElement uuid="ecbb7625-4179-416d-994b-f337e23a9611" x="1" y="3" width="56" height="39"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif"/>
+				</textElement>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="32" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="1db231dc-c315-4c2c-a034-fe687c9d1f23" x="59" y="4" width="70" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Serif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bl_no}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MM/dd/yyyy" isBlankWhenNull="true">
+				<reportElement uuid="09de60b2-c89e-4601-9edf-cab6a2cc3537" x="606" y="4" width="46" height="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{date_from}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MM/dd/yyyy" isBlankWhenNull="true">
+				<reportElement uuid="896a63e9-c8f8-409b-a5e1-f1a091173a1f" x="652" y="4" width="46" height="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{date_to}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MM/dd/yyyy" isBlankWhenNull="true">
+				<reportElement uuid="60ecc17f-d4a2-4af2-8e91-a378ff80dab2" x="744" y="4" width="46" height="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{date_to2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MM/dd/yyyy" isBlankWhenNull="true">
+				<reportElement uuid="019b1014-2964-4d1f-bb08-61a17d1514ce" x="698" y="4" width="46" height="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{date_from2}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="e92dddc3-d9d6-4c20-9686-dbc9163478bc" x="377" y="4" width="99" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Serif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{vassel_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="a90f3dde-3258-44d5-a7e7-704ff9d6b320" x="131" y="4" width="80" height="20">
+					<printWhenExpression><![CDATA[$F{c_type}=="20"]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Serif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{container}.substring( 0, 11 )]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="671d0124-49ba-427f-914b-0333b3237467" x="479" y="4" width="59" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Serif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{in_voyage_no}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MM/dd/yyyy" isBlankWhenNull="true">
+				<reportElement uuid="f315370f-a2db-4988-9dbe-48d5f755ec6a" x="790" y="4" width="46" height="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{date_from3}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MM/dd/yyyy" isBlankWhenNull="true">
+				<reportElement uuid="1804d9d6-49f5-4545-b38e-1fdc2c943631" x="836" y="4" width="46" height="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{date_to3}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="cfba271c-65e2-4715-a30f-a4b53704f0ba" x="909" y="4" width="83" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{amount_total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="9ec5fa67-49a7-4ccb-912e-27ee624ea27b" x="884" y="4" width="25" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{day_count}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="0dda530f-d701-4b5f-bbc7-e81848940f83" x="213" y="4" width="81" height="20">
+					<printWhenExpression><![CDATA[$F{c_type}=="40"]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Serif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{container}.substring( 0, 11 )]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="6d802a8d-00f1-46d2-b45a-e62b499f4022" x="296" y="4" width="81" height="20">
+					<printWhenExpression><![CDATA[$F{c_type}=="HC"]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Serif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{container}.substring( 0, 11 )]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="25501d95-ee5f-4bce-be99-cf11bf6b5d16" x="0" y="27" width="992" height="1"/>
+			</line>
+			<textField pattern="MM/dd/yyyy" isBlankWhenNull="true">
+				<reportElement uuid="5278db47-cecc-4abb-894d-517e8bb14540" x="540" y="4" width="65" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Serif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{etb}]]></textFieldExpression>
+			</textField>
+			<line direction="BottomUp">
+				<reportElement uuid="8969ef9c-3078-488f-9142-44e3edefbd1e" x="477" y="-42" width="1" height="69"/>
+			</line>
+			<line>
+				<reportElement uuid="16d8d9d6-00e1-43a2-89d3-d78dda9fb933" x="538" y="-42" width="1" height="69"/>
+			</line>
+			<line>
+				<reportElement uuid="f509f62b-0b5e-4d44-a75c-b3f90979cbf7" x="605" y="-42" width="1" height="69"/>
+			</line>
+			<line>
+				<reportElement uuid="ae802adb-83c4-4d9b-a1d5-0fa199112875" x="698" y="-42" width="1" height="69"/>
+			</line>
+			<line>
+				<reportElement uuid="37e6190b-4ad8-4128-810e-ee1d818b9724" x="743" y="-24" width="1" height="51"/>
+			</line>
+			<line>
+				<reportElement uuid="2ba07ffd-0228-4b70-99b3-35b0d18fe393" x="790" y="-42" width="1" height="69"/>
+			</line>
+			<line>
+				<reportElement uuid="ecd18874-2c7a-461c-bfb0-649d22e814e3" x="882" y="-42" width="1" height="69"/>
+			</line>
+			<line>
+				<reportElement uuid="8fed54f5-df4a-4df1-9805-159561436edb" x="909" y="-42" width="1" height="69"/>
+			</line>
+			<line>
+				<reportElement uuid="01fcee16-44de-4d63-8aa7-35c8020a536d" x="992" y="-42" width="1" height="70"/>
+			</line>
+			<line>
+				<reportElement uuid="d88d8671-b75f-4571-b830-bf30d0320f47" x="835" y="-24" width="1" height="51"/>
+			</line>
+			<line>
+				<reportElement uuid="1824e5d4-067d-43da-b318-23e472b6a87a" x="651" y="-24" width="1" height="51"/>
+			</line>
+			<line>
+				<reportElement uuid="f36f42e7-fae9-4822-854c-c002a0e39cdd" x="0" y="-42" width="1" height="69"/>
+			</line>
+			<line>
+				<reportElement uuid="3b33c7df-2643-42ca-b0c6-e5dfbd5d8a53" x="57" y="-42" width="1" height="69"/>
+			</line>
+			<line>
+				<reportElement uuid="15d4995f-fa3b-4b4f-b7b9-7065743588a6" x="129" y="-42" width="1" height="69"/>
+			</line>
+			<line>
+				<reportElement uuid="3ac5036c-c0ff-4974-865e-701054191401" x="211" y="-23" width="1" height="50"/>
+			</line>
+			<line>
+				<reportElement uuid="9b663257-5742-496a-b48c-f516ef1a2f45" x="294" y="-23" width="1" height="50"/>
+			</line>
+			<line>
+				<reportElement uuid="86dfee1e-c2c5-4757-9713-e54412ce4ad7" x="374" y="-42" width="1" height="69"/>
+			</line>
+			<textField pattern="MM/dd/yyyy">
+				<reportElement uuid="1c231fe6-663c-4af7-a40f-248e6be9f006" x="1" y="4" width="56" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Serif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{date}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="86" splitType="Stretch">
+			<textField pattern="#,##0.00">
+				<reportElement uuid="8064e14a-2a8f-4712-9bee-192c160e3c42" x="883" y="6" width="109" height="21"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sum_of_amount_total}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="24814965-03ee-4e7c-a3a7-32dd95b4bc10" x="791" y="6" width="91" height="21"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Amount Total:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="50fdd29f-2a4b-41bc-83bb-ba30b32262c8" x="211" y="45" width="327" height="21"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+					<font fontName="DejaVu Serif" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["CREDIT For Detention Income for the month of " + $P{cost_month}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="3cdb9727-d6fa-4b0d-83a0-b2bfb8b75ca5" x="679" y="66" width="61" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{usd_amount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="d5d00cba-5e91-4187-97aa-c5aa24674953" x="681" y="41" width="59" height="21"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="DejaVu Serif" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["US \$"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="679bb548-9a49-4c46-8cb7-2526f61d0cf5" x="742" y="41" width="48" height="21"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ex Rate]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="f61bb64d-571e-44a4-bce2-8d2af88b5c7a" x="743" y="66" width="47" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{exchange_rate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="0cab9e60-81ee-4f82-aa32-c5e283c3a8df" x="791" y="40" width="91" height="21"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MM Kyats]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="33ad0fdf-3d3f-43d9-bc19-c28026f02380" x="791" y="65" width="90" height="21"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sum_of_amount_total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

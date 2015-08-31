@@ -1,0 +1,120 @@
+<openerp>
+<data>
+
+        <record id="freight_search_form_view" model="ir.ui.view">
+            <field name="name">freight.line.search.form</field>
+            <field name="model">shipping.freight</field>
+            <field name="arch" type="xml">
+                <search string="Freight">
+                   <field name="name" string="Freight" filter_domain="['|',('name','ilike',self)]"/>
+                </search>
+            </field>
+        </record>
+
+		<record id="shipping_freight_tree_view" model="ir.ui.view">
+            <field name="name">shipping.freight.tree</field>
+            <field name="model">shipping.freight</field>
+            <field eval="7" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Freight Invoices Lines">
+                    <field name="vassel_id"/>
+                    <field name="in_voyage_no"/>
+                    <field name="shipper"/>
+                    <field name="bl_no" />
+                    <field name="date"/>
+                    <field name="port_of_loading_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        
+		<record id="shipping_freight_form_view" model="ir.ui.view">
+            <field name="name">shipping.freight.form</field>
+            <field name="model">shipping.freight</field>
+            <field name="arch" type="xml">
+                <form string="Freight Invoices" version="7.0">
+                    <header>
+                        <button name="button_confirm" string="Confirm" states="draft" type="object" />
+                        <button name="button_cancel" string="Cancel" states="draft" type="object" />
+                        <button name="create_invoice" states="confirmed" string="Create Invoices" type="object" />
+                        <button name="create_payment" states="invoiced" string="Paid" type="object" />
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,invoiced,done" statusbar_colors='{"cancel":"red"}'/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="vassel_id"/>
+                                <field name="in_voyage_no"/>
+                                <field name="shipper"/>
+                            </group>
+                            <group>
+                                <field name="bl_no" />
+                                <field name="date"/>
+                                <field name="port_of_loading_id"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Freight" >
+                            	<group>
+                                    <group>
+                                        <separator string="O/Freight" />
+                                        <field name="freight_lines" colspan="4" nolabel="1">
+                                            <tree editable="bottom" string="Freight lines">
+                                                <field name="name"  domain="[('freight','=',True)]"/>
+                                                <field name="currency_id"/>
+                                                <field name="amount"/>
+                                                <field name="quantity"/>
+                                                <field name="per"/>
+                                                <field name="net_amount"/>
+                                                 <field name="freight_term"/>
+                                            </tree>
+                                            <form string="Freight lines" version="7.0">
+                                                <group col="4">
+                                                    <field name="name"  domain="[('freight','=',True)]"/>
+		                                            <field name="currency_id"/>
+		                                            <field name="amount"/>
+		                                            <field name="quantity"/>
+		                                            <field name="per"/>
+		                                            <field name="net_amount"/>
+		                                            <field name="freight_term"/>
+                                                </group>
+                                            </form>
+                                        </field>
+                                        <group class="oe_subtotal_footer oe_right" colspan="2" name="freight_total">
+                                            <field name="freight_total" /> 
+                                        </group>
+                                    </group>
+                                    <group>
+                                        <separator string=" " />                                  
+                                        
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record id="open_view_shipping_freight_list" model="ir.actions.act_window">
+            <field name="name">Freight Invoices</field>
+            <field name="res_model">shipping.freight</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="freight_search_form_view"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a Freight Invoices.
+              </p><p>
+                With just a quick glance on the OpenERP Freight Invoices screen, you
+                can easily find all the information you need for each Freight Invoices;
+              </p>
+            </field>
+        </record>
+        
+        <menuitem action="open_view_shipping_freight_list" 
+        id="menu_view_shipping_freight_list" sequence="2" 
+        parent="menu_freight_main" />
+</data>
+</openerp>

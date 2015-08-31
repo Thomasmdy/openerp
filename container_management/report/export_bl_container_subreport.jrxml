@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="export_bl_container_subreport" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="6d8d4e48-7780-4883-b61b-882440fffd49">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="ship_line_id" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[20]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select ctn.id, seal_no, cgo.*, con.container_name,gu.g_uom, mu.m_uom, qu.q_uom FROM
+(select * from export_container_line
+where ship_line_id= $P{ship_line_id}) ctn
+LEFT JOIN
+(select container_id, ship_line_id, gross_weight, weight_uom, measurement, measurement_uom, quantity, uom
+from shipping_cargo_export
+where ship_line_id= $P{ship_line_id}
+) cgo ON ctn.container_id = cgo.container_id
+LEFT JOIN
+( SELECT id,name as container_name FROM shipping_container_inventory) con ON ctn.container_id = con.id
+LEFT JOIN (SELECT id, name g_uom from product_uom ) gu ON gu.id = cgo.weight_uom
+LEFT JOIN (SELECT id, name m_uom from product_uom ) mu ON mu.id = cgo.measurement_uom
+LEFT JOIN (SELECT id, name q_uom from product_uom ) qu ON qu.id = cgo.uom
+LIMIT 5]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer"/>
+	<field name="seal_no" class="java.lang.String">
+		<fieldDescription><![CDATA[Sael No]]></fieldDescription>
+	</field>
+	<field name="container_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Container No]]></fieldDescription>
+	</field>
+	<field name="ship_line_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Line]]></fieldDescription>
+	</field>
+	<field name="gross_weight" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[Gross Weight]]></fieldDescription>
+	</field>
+	<field name="weight_uom" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Weight UOM]]></fieldDescription>
+	</field>
+	<field name="measurement" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[Measurement]]></fieldDescription>
+	</field>
+	<field name="measurement_uom" class="java.lang.Integer">
+		<fieldDescription><![CDATA[UOM]]></fieldDescription>
+	</field>
+	<field name="quantity" class="java.math.BigDecimal"/>
+	<field name="uom" class="java.lang.Integer">
+		<fieldDescription><![CDATA[UoM]]></fieldDescription>
+	</field>
+	<field name="container_name" class="java.lang.String"/>
+	<field name="g_uom" class="java.lang.String"/>
+	<field name="m_uom" class="java.lang.String"/>
+	<field name="q_uom" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="15">
+			<textField>
+				<reportElement uuid="571d21b4-b16f-42cb-8848-7e3806e59d0d" x="25" y="0" width="100" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{container_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="dbe7de03-a936-4301-9076-87e6ccc17969" x="130" y="0" width="73" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{seal_no}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="4f02ed35-7b6d-4a80-9e7f-12e43eb7b048" x="218" y="0" width="43" height="15"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="6b067844-cff1-4cc8-a63e-4a5f3c39b7ce" x="261" y="0" width="45" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{q_uom}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="1fa34d69-4d8c-416e-bda5-c5d33f2153c1" x="306" y="0" width="47" height="15"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{measurement}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="870bc8b6-1c8c-4541-9aae-a82ffb4ae6c5" x="353" y="0" width="39" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{m_uom}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="75f23393-2743-4878-ba5f-3d07dd631473" x="392" y="0" width="62" height="15"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{gross_weight}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="4f8f4818-aa9a-48ac-a09e-93c685d467ec" x="454" y="0" width="100" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{g_uom}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

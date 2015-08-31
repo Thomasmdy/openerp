@@ -1,0 +1,99 @@
+<openerp>
+<data>
+        <!--RO Data Start-->
+
+        <record id="shipping_release_order_view" model="ir.ui.view">
+            <field name="name">shipping.release.order.tree</field>
+            <field name="model">shipping.release.order</field>
+            <field eval="7" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Release Order Lines">
+                    <field name="name" string="RO No."/> 
+					<field name="operator_code" />	
+                    <field name="vassel_id"/>
+                    <field name="consignee"/>
+                    <field name="shipper"/>
+                    <field name="feeder_line"/>
+                    <field name="bl_no" />
+                    <field name="in_voyage_no" />
+                    <field name="etb" />
+                    <field name="ro_date"/>
+                    <field name="release_status"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="shipping_release_order_form_view" model="ir.ui.view">
+            <field name="name">shipping.release.order.form</field>
+            <field name="model">shipping.release.order</field>
+            <field name="arch" type="xml">
+                <form string="Release Order Form" version="7.0">
+                    <header>     
+                        <button name="button_ro_receipt_invoice" states="draft,received" string="Print Invoice" type="object" />  
+						<button name="button_release_order" states="draft,received" string="Print" type="object" />  
+						<button name="button_receive" states="draft" string="Receive" type="object" />		
+                        <field name="state" widget="statusbar" statusbar_visible="draft,received"  statusbar_colors='{"cancel":"red"}'/>						                     
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                            	
+								<field name="name" string="RO No."/> 
+								<field name="operator_code" />	
+	                            <field name="vassel_id"/>
+                                <field name="consignee"/>
+                                <field name="shipper"/>
+                                <field name="feeder_line"/>
+                                <field name="in_voyage_no" />
+                            </group>
+                            <group>
+                                <field name="received_no" />
+                                <field name="received_by"/>
+                                <field name="container_state"/>
+								<field name="amount"/>                                             
+                                <field name="bl_no" />
+                                <field name="ro_date"/>
+                                <field name="etb" />
+                                <field name="release_status"/>
+								<field name="notify_party"/>
+                                <field name="notify_party1"/>
+                                <field name="notify_party2"/>                                
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+
+        <record id="open_view_shipping_release_order_form" model="ir.actions.act_window">
+            <field name="name">Release Order</field>
+            <field name="res_model">shipping.release.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="help" type="html">
+              
+            </field>
+        </record>
+        
+         <record id="open_view_shipping_release_order_list" model="ir.actions.act_window">
+            <field name="name">Release Order</field>
+            <field name="res_model">shipping.release.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a Release Order.
+              </p><p>
+                With just a quick glance on the OpenERP Release Order screen, you
+                can easily find all the information you need for each Release Order;
+              </p>
+            </field>
+        </record>
+        
+        <menuitem action="open_view_shipping_release_order_list" id="menu_open_view_view_shipping_release_order_list" sequence="5" 
+        parent="menu_freight_main" />
+        
+</data>
+</openerp>

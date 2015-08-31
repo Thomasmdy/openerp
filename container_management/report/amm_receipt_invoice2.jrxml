@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="amm_receipt_invoice" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="5" bottomMargin="5" uuid="5a22a5b1-1cd9-48b3-b216-7114b274d58c">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="58"/>
+	<parameter name="company_name" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["DZ CONTAINER SERVICES CO., LTD."]]></defaultValueExpression>
+	</parameter>
+	<parameter name="address" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["NO.446, 7FL, Merchant Road, Yangon, Myanmar"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="tel_fax" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["Tel/Fax: 951-240622,240511, 392200, 392300."]]></defaultValueExpression>
+	</parameter>
+	<parameter name="am_id" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[106]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select am.*, rp.partner_name from
+(select id, changes, name, change_count, amount, received_by, date from shipping_bl_order_line_amendment
+where id= $P{am_id}) am
+left join (select id, name partner_name from res_partner) rp on am.received_by = rp.id]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer"/>
+	<field name="changes" class="java.lang.String">
+		<fieldDescription><![CDATA[Amendments]]></fieldDescription>
+	</field>
+	<field name="name" class="java.lang.String"/>
+	<field name="change_count" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Amendment Count]]></fieldDescription>
+	</field>
+	<field name="amount" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[Amount]]></fieldDescription>
+	</field>
+	<field name="received_by" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Received]]></fieldDescription>
+	</field>
+	<field name="date" class="java.sql.Date">
+		<fieldDescription><![CDATA[End Date]]></fieldDescription>
+	</field>
+	<field name="partner_name" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="113" splitType="Stretch">
+			<textField>
+				<reportElement uuid="41aad54d-6cd6-4afa-9288-a696d97961d9" x="1" y="20" width="590" height="43"/>
+				<textElement textAlignment="Center">
+					<font fontName="Kinnari" size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{address}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="7064e28a-9ac3-4795-b10b-4766c0baa6ee" x="1" y="39" width="590" height="43"/>
+				<textElement textAlignment="Center">
+					<font fontName="Kinnari" size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{tel_fax}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e3f59fcf-dd6c-4bd0-8208-7ca9f3376c11" x="0" y="0" width="590" height="43"/>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="19" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{company_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8ccdd3c5-a478-4e9e-b1d2-6323e57ad4b1" x="1" y="66" width="590" height="43"/>
+				<textElement textAlignment="Center">
+					<font fontName="Kinnari" size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["OFFICIAL RECEIPT"]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="50">
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="e967709e-1c73-430e-ab6a-688e42a152dd" x="80" y="0" width="244" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{partner_name}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MM/dd/yyyy">
+				<reportElement uuid="66b89446-8239-4be8-bf48-caf8f7d164c9" x="487" y="0" width="100" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="a7a7ac63-978c-4bf7-aded-8cbe3297aa6c" x="79" y="20" width="245" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="e6995de5-25a3-41a0-bd44-b0cc81cf3665" x="1" y="0" width="76" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<text><![CDATA[Name:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="1726a8c3-0750-4779-99b4-58cd6c04c6fe" x="0" y="20" width="76" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<text><![CDATA[Invoice No:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="595dddcd-efe4-4d9f-84cf-bbfb8d557316" x="409" y="0" width="76" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<text><![CDATA[Invoice Date:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="649f4be3-02e5-4e25-9909-17eccbb425e2" x="409" y="20" width="76" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<text><![CDATA[Total Changes:]]></text>
+			</staticText>
+			<textField pattern="#,##0">
+				<reportElement uuid="a49205c6-3cc2-4516-8b0a-19993f70ec09" x="487" y="20" width="100" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{change_count}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="27" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="54af0cdd-831d-4920-bc13-97c15eeb3d91" x="45" y="3" width="89" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Particular]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c5aae75d-2753-44b0-bffd-72a3413468ba" x="147" y="3" width="87" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Changes]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="1c1b0387-a889-408b-9014-9d50d373eb22" x="493" y="3" width="91" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Amount]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="f9b5a223-90ff-4b3c-b848-9710aa1c1ce3" x="0" y="25" width="595" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="89b06f58-7bba-44bd-a451-762f16dd7996" x="0" y="0" width="595" height="1"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="34" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="e1723589-ab9e-4906-b90c-788fb0b1dd7f" x="43" y="0" width="91" height="20"/>
+				<textElement verticalAlignment="Middle" markup="none"/>
+				<text><![CDATA[Ammendment]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" pattern="">
+				<reportElement uuid="da80f796-2064-46de-89fe-cf24974bb509" x="147" y="0" width="261" height="20"/>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{changes}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="82bbeab0-84c3-4b8d-a6e2-444a45535d76" x="484" y="0" width="100" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="52">
+			<line>
+				<reportElement uuid="0f204376-8553-4519-b0d0-01634cfd1c68" x="411" y="45" width="180" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="43067684-fb36-470e-bdd1-b2e416cd8efa" x="411" y="47" width="180" height="1"/>
+			</line>
+			<staticText>
+				<reportElement uuid="eb171f3e-46e0-453e-82e5-a1aa7be4dbdf" x="408" y="22" width="76" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<text><![CDATA[Net Total:]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="0b182b41-a9e9-42cc-852e-645de0c7d6bd" x="484" y="22" width="100" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="d1b76690-55fe-49ce-9ce6-6bfebc9c4c70" x="0" y="0" width="595" height="1"/>
+			</line>
+		</band>
+	</summary>
+</jasperReport>

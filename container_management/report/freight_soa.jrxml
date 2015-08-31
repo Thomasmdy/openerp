@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="freight_soa" language="groovy" pageWidth="595" pageHeight="842" columnWidth="591" leftMargin="2" rightMargin="2" topMargin="5" bottomMargin="5" uuid="5a22a5b1-1cd9-48b3-b216-7114b274d58c">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="129"/>
+	<property name="ireport.y" value="288"/>
+	<parameter name="date" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["30-JUNE-2014"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="cost_month" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["06-2014"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="messers" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="company_name" class="java.lang.String">
+		<defaultValueExpression><![CDATA["DZ CONTAINER SERVICES CO., LTD."]]></defaultValueExpression>
+	</parameter>
+	<parameter name="address" class="java.lang.String">
+		<defaultValueExpression><![CDATA["NO.446, 7FL, Merchant Road, Yangon, Myanmar"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="tel_fax" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Tel/Fax: 951-240622,240511, 392200, 392300."]]></defaultValueExpression>
+	</parameter>
+	<parameter name="cur_rate" class="java.lang.Float" isForPrompting="false">
+		<defaultValueExpression><![CDATA[0.000960339]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select bl.bl_no, bl.vassel_id, vs.name , bl.in_voyage_no, bl.etb, bl.total_container_20, total_container_40,
+fr.net_amount, fr.amount, fr.currency_id, cur.name, fr.freight_term
+from shipping_bl_order_line bl inner join
+( select * from export_freight_line) fr on bl.id = fr.ship_line_id
+left join (select id, name from shipping_vassel) vs on bl.vassel_id = vs.id
+left join (select id, name from res_currency ) cur on fr.currency_id = cur.id]]>
+	</queryString>
+	<field name="bl_no" class="java.lang.String">
+		<fieldDescription><![CDATA[BL Name]]></fieldDescription>
+	</field>
+	<field name="vassel_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Vassel Name]]></fieldDescription>
+	</field>
+	<field name="name" class="java.lang.String"/>
+	<field name="in_voyage_no" class="java.lang.String">
+		<fieldDescription><![CDATA[IN Voyage No]]></fieldDescription>
+	</field>
+	<field name="etb" class="java.sql.Date">
+		<fieldDescription><![CDATA[ETB YGN]]></fieldDescription>
+	</field>
+	<field name="total_container_20" class="java.lang.Integer">
+		<fieldDescription><![CDATA[unknown]]></fieldDescription>
+	</field>
+	<field name="total_container_40" class="java.lang.Integer">
+		<fieldDescription><![CDATA[unknown]]></fieldDescription>
+	</field>
+	<field name="net_amount" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[NET AMOUNT]]></fieldDescription>
+	</field>
+	<field name="amount" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[Amount]]></fieldDescription>
+	</field>
+	<field name="currency_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Secondary Currency]]></fieldDescription>
+	</field>
+	<field name="freight_term" class="java.lang.String">
+		<fieldDescription><![CDATA[Freight Term]]></fieldDescription>
+	</field>
+	<variable name="line_count" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$V{line_count}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="usd_amount" class="java.lang.Float">
+		<variableExpression><![CDATA[$F{net_amount}*$P{cur_rate}]]></variableExpression>
+		<initialValueExpression><![CDATA[$F{net_amount}*$P{cur_rate}]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="274" splitType="Stretch">
+			<textField>
+				<reportElement uuid="c80611b5-d37a-4af0-a735-abcb1fbae98d" x="0" y="119" width="380" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["DATE:     " + $P{date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="239b7927-e4df-4529-b258-b1e756633d7c" x="0" y="140" width="380" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["COST MONTH: " + $P{cost_month}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="637c4b1b-b59e-45ca-8104-e9c5ef6483f5" x="0" y="161" width="380" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Serif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MESSERS: "KAWASAKI KISEN KAISHA LTD c/o KSP"]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="419f474d-d282-413f-8d47-19fb3ca15fdc" x="0" y="182" width="380" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Serif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SUBJECT: CREDIT TO KKK FOR FREIGHT SOA(CSL)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="91edb20a-1242-43c8-a6c4-d175c9a6e718" x="0" y="202" width="380" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Serif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Reporting Agent: DZ Container Service Co., Ltd.]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="fae42853-1910-47c3-83a2-8ebf5f553d16" x="0" y="222" width="380" height="20"/>
+				<textElement markup="none">
+					<font fontName="DejaVu Serif" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Record No.           :"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="41aad54d-6cd6-4afa-9288-a696d97961d9" x="1" y="20" width="590" height="43"/>
+				<textElement textAlignment="Center">
+					<font fontName="Kinnari" size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{address}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="7064e28a-9ac3-4795-b10b-4766c0baa6ee" x="1" y="39" width="590" height="43"/>
+				<textElement textAlignment="Center">
+					<font fontName="Kinnari" size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{tel_fax}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e3f59fcf-dd6c-4bd0-8208-7ca9f3376c11" x="0" y="0" width="590" height="43"/>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="19" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{company_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="abdb06e6-bbde-4557-93ed-6a8de84b4a4f" x="1" y="243" width="380" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Serif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ACC CODE           :60101]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="47" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="0526f613-ed9f-4ac8-86dc-99f6f220164b" x="45" y="2" width="88" height="45"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[B/L No.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="42dd65f3-3abc-4be9-a97f-40b01f0dbb0d" x="133" y="2" width="92" height="45"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Vassel]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c278955f-409d-4e47-ab8b-178671290537" x="223" y="2" width="79" height="45"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Voyage]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="cd30ad20-719a-44ba-b115-df88a0ff10b5" x="302" y="2" width="78" height="45"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[ETD YGN
+YYYY/MM/DD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3ff684b9-0c3e-44c1-bc88-4202eeb70a3b" x="446" y="2" width="64" height="45"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Total
+MMKyats]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="92500819-3623-4a85-9ca8-6dea82ef3505" x="380" y="2" width="66" height="24"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[UNITS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d592aa46-f1c4-4b8b-b049-2f262e595cdb" x="380" y="26" width="30" height="21"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[20']]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="77f8335c-06b0-45d3-9c67-c36fca2f9432" x="410" y="26" width="36" height="21"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[40']]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3322d6d8-0e02-4174-81b4-21c7bbcd0877" x="0" y="2" width="45" height="45"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Sr.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="de8ed798-031c-4095-ac81-7965ee590546" x="512" y="2" width="64" height="45"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Total
+USD $]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="29" splitType="Stretch">
+			<textField>
+				<reportElement uuid="c4acc29a-c632-4383-b93a-97d0ed25e679" x="45" y="0" width="88" height="24"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{bl_no}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="91742988-1f92-4d0d-b023-867110fa05e3" x="133" y="0" width="92" height="24"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="ec35e186-1a2d-4dfe-9149-a44cbf1850e4" x="223" y="0" width="79" height="24"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{in_voyage_no}]]></textFieldExpression>
+			</textField>
+			<textField pattern="yyyy/MM/dd">
+				<reportElement uuid="bd79504c-1eb9-439a-bcec-09f40ef69242" x="302" y="0" width="78" height="24"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{etb}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="205cada7-919b-4150-bfab-25c6b939b27a" x="446" y="0" width="64" height="24"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{net_amount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="a02c8a9d-f0d7-4ea6-b7e0-c809d6ada5ff" x="380" y="0" width="30" height="24"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{total_container_20}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="a7b0c4ee-f2b8-4816-b862-58c943231014" x="410" y="0" width="36" height="24"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{total_container_40}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8b672e83-2dad-41c7-9746-0ef27c867ec8" x="0" y="0" width="45" height="24"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$V{line_count}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="62c5eb99-a5ac-4454-b75e-6327cc24fb07" x="512" y="0" width="64" height="24"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{usd_amount}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="36" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

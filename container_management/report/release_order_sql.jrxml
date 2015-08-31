@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="release_order_sql" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="297a4dee-c671-44df-ab9f-5317cc64267e">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="324"/>
+	<property name="ireport.y" value="118"/>
+	<style name="style1" forecolor="#000000" fill="Solid" isBlankWhenNull="false" fontName="Zawgyi-One" fontSize="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="/usr/share/fonts/zawgyi/Zawgyi-One_v4.30_November_14_20.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/home/hms/businessauto/modules_internal7/container_management/report/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ship_line_id" class="java.lang.Integer"/>
+	<parameter name="rec_name" class="java.lang.String"/>
+	<parameter name="nrc" class="java.lang.String"/>
+	<parameter name="tel" class="java.lang.String"/>
+	<parameter name="ro_date" class="java.lang.String"/>
+	<parameter name="rec_no" class="java.lang.String"/>
+	<parameter name="org" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select bl.*, sv.name as vassel_name, f_par.name as feeder_line_name, c_par.name as consignee_name,
+s_par.name as shipper_name, n_par.name as notify_party_name,n1_par.name as notify_party1_name,
+n2_par.name as notify_party2_name from
+(select feeder_line, vassel_id, release_status, consignee, bl_no, shipper
+,notify_party, notify_party1, notify_party2,
+port_of_loading_id, name,etb, operator_code  from shipping_bl_order_line
+where id= $P{ship_line_id} ) bl
+left join (select id, name from shipping_vassel) sv on bl.vassel_id = sv.id
+left join (select id, name from res_partner) f_par on  bl.feeder_line = f_par.id
+left join (select id, name from res_partner) c_par on  bl.consignee = c_par.id
+left join (select id, name from res_partner) s_par on  bl.shipper = s_par.id
+left join (select id, name from res_partner) n_par on  bl.notify_party = n_par.id
+left join (select id, name from res_partner) n1_par on  bl.notify_party1 = n1_par.id
+left join (select id, name from res_partner) n2_par on  bl.notify_party2 = n2_par.id]]>
+	</queryString>
+	<field name="feeder_line" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Feeder Operator]]></fieldDescription>
+	</field>
+	<field name="vassel_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Vassel Name]]></fieldDescription>
+	</field>
+	<field name="release_status" class="java.lang.String">
+		<fieldDescription><![CDATA[Release Status]]></fieldDescription>
+	</field>
+	<field name="consignee" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Consignee]]></fieldDescription>
+	</field>
+	<field name="bl_no" class="java.lang.String">
+		<fieldDescription><![CDATA[BL Name]]></fieldDescription>
+	</field>
+	<field name="shipper" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Shipper]]></fieldDescription>
+	</field>
+	<field name="notify_party" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Notify Party]]></fieldDescription>
+	</field>
+	<field name="notify_party1" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Notify Party1]]></fieldDescription>
+	</field>
+	<field name="notify_party2" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Notify Party2]]></fieldDescription>
+	</field>
+	<field name="port_of_loading_id" class="java.lang.Integer"/>
+	<field name="name" class="java.lang.String"/>
+	<field name="etb" class="java.sql.Date">
+		<fieldDescription><![CDATA[ETB YGN]]></fieldDescription>
+	</field>
+	<field name="operator_code" class="java.lang.String"/>
+	<field name="vassel_name" class="java.lang.String"/>
+	<field name="feeder_line_name" class="java.lang.String"/>
+	<field name="consignee_name" class="java.lang.String"/>
+	<field name="shipper_name" class="java.lang.String"/>
+	<field name="notify_party_name" class="java.lang.String"/>
+	<field name="notify_party1_name" class="java.lang.String"/>
+	<field name="notify_party2_name" class="java.lang.String"/>
+	<variable name="release_code" class="java.lang.String">
+		<initialValueExpression><![CDATA[$F{release_status} + " Of " + $F{operator_code}]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="36" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="2c8da7b0-4310-4f3b-8e31-e1181904952f" positionType="FixRelativeToBottom" x="0" y="15" width="555" height="15" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NO.(446/D),7th Floor Merchant Street,Botahuaung Township]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="fd60633b-f47c-45fd-8b0b-8b08fad08126" positionType="FixRelativeToBottom" x="0" y="1" width="555" height="15" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DZ CONTAINER SERVICES CO.,LTD]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="250" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="e0061c4d-f3d2-44f7-8ab5-0ed5f26090f4" x="0" y="190" width="75" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Notify 2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5f61aa38-c4ec-4976-8c89-3aa7f0b06cdc" x="0" y="142" width="75" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Consignee]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a9454978-09a0-4926-a314-0802969b773f" x="0" y="174" width="75" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Notify 1]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="5eb84d6c-ff48-4645-8a4c-bd5602f9e52f" x="0" y="94" width="517" height="15"/>
+				<textElement markup="none">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["We are pleased to request you to release below cargo to consignee " + $F{release_status}.trim() + " of " + $F{operator_code}.trim()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="d4819640-970a-45dd-acba-ddeebcc479ea" x="0" y="78" width="75" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Subject]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d38739d4-d3d6-4296-80f8-cf450d398dbc" x="0" y="46" width="75" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Yangon]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4cb1769a-895a-471b-848a-63afc2ce94e8" x="0" y="4" width="75" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[The Manager]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="cca38670-187a-4d16-b060-fc52b8b562ea" x="0" y="207" width="75" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Vessel]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="8b20976a-9476-4b72-8eca-da692e69a82d" x="0" y="158" width="75" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Notify]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="8ce5ee2b-bad4-40ec-ac2c-f89e198b039a" x="0" y="62" width="75" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Ref]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6e55bc6e-0f1d-474d-a365-954d5534bc48" x="0" y="126" width="75" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Shipper]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ebd3f055-bb38-49e7-b11d-fb98b34ac5a8" x="0" y="110" width="75" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[B/L NO.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="0b8262c4-ec75-4bdd-ab7e-139f5da11b5e" x="0" y="224" width="75" height="20"/>
+				<textElement/>
+				<text><![CDATA[Container No.]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="b83d9235-5155-43b5-aa76-36564b65cd10" x="0" y="22" width="412" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{feeder_line_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="3c781ea1-dacf-4eac-b554-e374d283a3f8" x="82" y="62" width="100" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="fc248ee9-c5be-4a70-98b9-3faa712d2aa3" x="82" y="79" width="145" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Requese to Release Cargo]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="dd39ef31-bd9b-42a7-8876-9bcf2a8e41b1" x="82" y="110" width="161" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{bl_no}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="a65077d8-ed0f-4d2f-8f85-00d829aeb8f0" x="82" y="126" width="161" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{shipper_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="ebfbb3ba-a9ed-43cc-ae16-93e24a2afd65" x="82" y="142" width="161" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{consignee_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="ebe796f5-c350-4b72-9fa3-4d09e8e4b409" x="82" y="158" width="161" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{notify_party_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="1874bb31-64c2-47b6-9c41-42f00cd96bbf" x="82" y="174" width="161" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{notify_party1_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="97999e03-47f9-4059-b880-7323343d1a89" x="82" y="190" width="161" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{notify_party2_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="f328b67e-cdae-4651-bbba-0de171db3e0f" x="82" y="207" width="161" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{vassel_name}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement uuid="7a03d772-d045-4556-854c-27e5f40426de" x="82" y="222" width="161" height="20"/>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="ship_line_id">
+					<subreportParameterExpression><![CDATA[$P{ship_line_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "release_order_sql_container.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</columnHeader>
+	<summary>
+		<band height="244" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="c2dcbbf8-a03c-4e70-badf-5a61637f4358" style="style1" x="0" y="93" width="549" height="12"/>
+				<textElement textAlignment="Left">
+					<font fontName="Zawgyi-One" size="8" isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[ကုန္ေသတဿတာ အခြန္(မ်ား) ကို [ ICD2 ]သို့ျပန္လည္ပို့္ေပးပါရန္။]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="e0ee24e3-e6f1-4ea7-af95-4944ae956982" x="0" y="57" width="555" height="12"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Best regards,]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="1e536559-e599-4c43-aa33-6152f8c4f4f9" x="0" y="21" width="555" height="12"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Pls collect relevant storage charges before release.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b01d5c0d-88ac-4c9c-9c0a-9b21344a5f9a" x="0" y="75" width="211" height="12"/>
+				<textElement textAlignment="Left">
+					<font fontName="Zawgyi-One" size="8" isBold="true" isItalic="false" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[CONSIGNEE မ်ားသိေစရန္။]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="19a28011-7738-49ba-9c91-7e6e60f007e2" x="0" y="3" width="82" height="12"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Operator Code:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="29142be0-7030-4fc9-8b5b-58b3d3afc3c1" x="0" y="111" width="82" height="12"/>
+				<textElement textAlignment="Left">
+					<font fontName="Zawgyi-One" size="8" isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Operator Code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="e0d96b74-e18c-4ed5-b0f7-c946c17841f4" x="0" y="39" width="555" height="12"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Thanking you.]]></text>
+			</staticText>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="d1b4ee3c-f76c-452e-bc42-f3bfb9d95dc2" x="82" y="3" width="100" height="12"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{operator_code}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="5bc5fd85-2ad2-48b5-a9ae-42d37090fb5d" x="82" y="111" width="100" height="12"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{operator_code}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="43bf9b9c-c64c-4d4c-b3a4-4b82b0d2df04" x="37" y="151" width="10" height="15"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="85efe050-2195-465a-bf63-d9656d77f16c" x="37" y="182" width="10" height="15"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4bff6fb0-4c30-4439-92d7-59276911bcf3" x="37" y="166" width="10" height="15"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="4a983a8e-0aef-45f0-8597-ee74e5d20a44" x="0" y="142" width="70" height="1"/>
+			</line>
+			<staticText>
+				<reportElement uuid="5b476d13-cd01-4ae0-93d1-3dd115b3c2cc" x="0" y="151" width="36" height="15"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="e197e69a-81aa-4c5d-b506-141f0122eafc" x="0" y="182" width="36" height="15"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tel]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a471f451-e929-49d2-af05-d5034cfaeff4" x="0" y="127" width="70" height="15"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Received]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9890597e-78be-48f1-931d-9ac40b7dec54" x="0" y="166" width="36" height="15"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NRC]]></text>
+			</staticText>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="1175899d-a2fd-459e-bd17-3e1a474a0f77" x="49" y="166" width="162" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{nrc}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="f714789c-a42f-4898-94ef-d01428ccfb97" x="49" y="151" width="162" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{rec_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement uuid="5bacc8cd-9cf9-4908-9af3-71b2c4e1c490" x="49" y="182" width="162" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{tel}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

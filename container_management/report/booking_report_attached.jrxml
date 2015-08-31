@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="booking_report_subreport" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="a789c2a9-9e58-4bc3-9194-1e99740b3a0f">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="booking_id" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[4]]></defaultValueExpression>
+	</parameter>
+	<parameter name="subject" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="shipper_name" class="java.lang.String" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[select row_number() over ( order by bkc.booking_id) as row_number, bkc.*, cnt.container_name, vs.vassel_name from
+(select  booking_id, container_id, seal_no,vassel_id, voyage_no from shipping_booking_container where booking_id =$P{booking_id}) bkc
+INNER JOIN
+(select id, name container_name  from shipping_container_inventory
+) cnt on cnt.id = bkc.container_id
+INNER JOIN
+(select id, name vassel_name  from shipping_vassel
+) vs on vs.id = bkc.vassel_id]]>
+	</queryString>
+	<field name="row_number" class="java.lang.Long"/>
+	<field name="booking_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Booking]]></fieldDescription>
+	</field>
+	<field name="container_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Container No]]></fieldDescription>
+	</field>
+	<field name="seal_no" class="java.lang.String">
+		<fieldDescription><![CDATA[Sael No]]></fieldDescription>
+	</field>
+	<field name="vassel_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Vassel Name]]></fieldDescription>
+	</field>
+	<field name="voyage_no" class="java.lang.String">
+		<fieldDescription><![CDATA[Voyage No]]></fieldDescription>
+	</field>
+	<field name="container_name" class="java.lang.String"/>
+	<field name="vassel_name" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="50">
+			<textField>
+				<reportElement uuid="909d0c1c-cf35-425e-ab60-7a887f4d856b" x="0" y="0" width="525" height="20"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{subject}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="5fd112b4-5222-48e3-931b-443c3fac5207" x="0" y="20" width="448" height="20"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{shipper_name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="22">
+			<staticText>
+				<reportElement uuid="45ffeba6-e706-46ee-acbf-206716bc78d5" x="8" y="2" width="33" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[NO.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="fc556b63-1076-4921-aec7-7e779020e823" x="51" y="2" width="90" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[CONTAINER]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="709f3f2b-b328-4020-813c-5030b437670f" x="145" y="2" width="111" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[VASSEL]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="7c647da5-666b-45ad-94a1-d0a160aea310" x="0" y="1" width="500" height="1"/>
+			</line>
+			<staticText>
+				<reportElement uuid="fa5d80b1-c686-4d64-8ae3-c12c3e3f0e46" x="273" y="2" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Voyage No]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement uuid="36419f26-9457-4125-a191-2a28f827660d" x="8" y="1" width="33" height="17"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{row_number}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="ff55e7e2-6bab-4434-8507-efa0e4d50e90" x="51" y="1" width="90" height="17"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{container_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b1be453d-9432-4ffd-bc83-49f6fbec5722" x="145" y="1" width="111" height="17"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{vassel_name}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="d028dffb-fe46-4bdc-b155-8249b76f11b5" x="0" y="1" width="500" height="1"/>
+			</line>
+			<textField>
+				<reportElement uuid="79db2972-ea17-40f7-b81c-026cfe93d77f" x="273" y="1" width="100" height="17"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{voyage_no}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="29">
+			<line>
+				<reportElement uuid="fe28e5ee-9ff5-41ab-b173-a2ec13417803" x="0" y="0" width="500" height="1"/>
+			</line>
+		</band>
+	</summary>
+</jasperReport>

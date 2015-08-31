@@ -1,0 +1,1185 @@
+<openerp>
+<data>
+
+        <menuitem name="Container Tracking And Planning"
+            id="menu_shipping_root"
+            sequence="1"/>
+
+        <menuitem id="menu_vassel_main" parent="menu_shipping_root" name="Vassel" sequence="0"/>
+        <menuitem id="menu_container_main" parent="menu_shipping_root" name="Containers" sequence="1"/>
+        
+        <menuitem id="menu_bl_main" parent="menu_shipping_root" name="Bill Of Loading" sequence="2"/>
+        
+        <menuitem id="menu_ro_main" parent="menu_shipping_root" name="Release Orders" sequence="3"/>
+        
+        <menuitem id="menu_config_main" parent="menu_shipping_root" name="Configuration" sequence="40"/>
+        
+        <menuitem id="menu_freight_main" parent="menu_shipping_root" name="Invoices" sequence="25"/>
+        
+        <menuitem id="menu_shipping_reporting" name="Reports"
+            parent="menu_shipping_root" sequence="30"/>
+            
+        <record id="shipping_container_move_search_form_view" model="ir.ui.view">
+            <field name="name">shipping.container.move.search.form</field>
+            <field name="model">shipping.container.move</field>
+            <field name="arch" type="xml">
+                <search string="Container Movement">
+                   <field name="source" string="Container" />
+                   <field name="date" string="Date" />
+                </search>
+            </field>
+        </record>
+
+		<record id="shipping_container_move_view" model="ir.ui.view">
+            <field name="name">shipping.container.move.form</field>
+            <field name="model">shipping.container.move</field>
+            <field eval="7" name="priority"/>
+            <field name="arch" type="xml">
+            	 <form string="Container Move" version="7.0">
+                	<header>
+                        <button name="button_confirm" states="draft" string="Confirm" type="object" />
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done" statusbar_colors='{"cancel":"red"}'/>
+                    </header>
+                    <sheet>
+                    	<group>
+                                <group>
+                                    <field name="port_id"/>
+                                    <field name="date"/>
+                                </group>
+                                <group>
+                                    <field name="source"/>
+                                </group>
+                        </group>
+                        <separator string="INCOMING" />
+                        <field name='move_lines'  >
+                        	<tree string="Daily Container Movement" editable="bottom" >
+							    <field name="container" string="IN Container" domain="[('status','=','used')]" />
+							    <field name="vassel_id"/>
+							    <field name="condition"/>
+							    <field name="shipper"/>
+							 </tree>
+                        </field>
+                        <separator string="OUTGOING" />
+                        <field name='out_move_lines' >
+                        	<tree string="Daily Container Movement" editable="bottom" >
+							    <field name="container" string="OUT Container" />
+							    <field name="vassel_id"/>
+							    <field name="condition"/>
+							    <field name="shipper"/>   
+							 </tree>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record id="shipping_container_move_tree_view" model="ir.ui.view">
+            <field name="name">shipping.container.move.tree</field>
+            <field name="model">shipping.container.move</field>
+            <field eval="7" name="priority"/>
+            <field name="arch" type="xml">
+            	 <tree string="Daily Container Movement" >
+					<field name="port_id"/>
+					<field name="date"/>
+					<field name="source"/>
+					<field name='move_lines' />
+					<field name="state"/>
+				 </tree>
+            </field>
+        </record>
+        
+        <record id="open_view_shipping_container_move_list" model="ir.actions.act_window">
+            <field name="name">Daily Container Movement</field>
+            <field name="res_model">shipping.container.move</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="shipping_container_move_tree_view"/>
+            <field name="search_view_id" ref="shipping_container_move_search_form_view"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a Detention Charge.
+              </p><p>
+                With just a quick glance on the OpenERP Container Daily move screen, you
+                can easily find all the information you need for each Container;
+              </p>
+            </field>
+        </record>
+        
+        <menuitem action="open_view_shipping_container_move_list" 
+        id="menu_view_shipping_container_move_list" 
+        parent="menu_container_main" />
+
+        <record id="shipping_container_status_form_view" model="ir.ui.view">
+            <field name="name">shipping.container.status.form</field>
+            <field name="model">shipping.container.status</field>
+            <field name="arch" type="xml">
+                <form string="Container Status" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>                            	
+								<field name="name"/> 
+								<field name="description" />
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>						
+
+        <record id="shipping_container_status_tree_view" model="ir.ui.view">
+            <field name="name">shipping_container_status_tree</field>
+            <field name="model">shipping.container.status</field>
+            <field eval="7" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Container Status">
+                    <field name="name"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+        
+
+         <record id="open_view_container_status_list" model="ir.actions.act_window">
+            <field name="name">Container Status</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+             <field name="view_mode">tree,form</field>             
+             <field name="view_id" ref="shipping_container_status_tree_view"/> 
+			 <field name="res_model">shipping.container.status</field>             
+         </record>                  
+                
+         <menuitem action="open_view_container_status_list" id="menu_shipping_container_status" name="Container Status"
+            parent="menu_config_main" />
+            
+        <record id="vassel_search_form_view" model="ir.ui.view">
+            <field name="name">vassel.search.form</field>
+            <field name="model">shipping.vassel</field>
+            <field name="arch" type="xml">
+                <search string="Vassel">
+                   <field name="name" string="Vassel" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="shipping_vassel_tree_view" model="ir.ui.view">
+            <field name="name">shipping.vassel.tree</field>
+            <field name="model">shipping.vassel</field>
+            <field eval="7" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Vassels">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="weight_net"/>
+                    <field name="company_id" groups="base.group_multi_company" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="shipping_vassel_form_view" model="ir.ui.view">
+            <field name="name">shipping.vassel.form</field>
+            <field name="model">shipping.vassel</field>
+            <field name="arch" type="xml">
+                <form string="Shipping Vassel" version="7.0">
+                    <sheet>
+                        <field name="image_medium" widget="image" class="oe_avatar oe_left"/>
+                        <div class="oe_title">
+                            <div class="oe_edit_only">
+                                <label for="name" string="Vassel Name"/>
+                            </div>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                            <label for="code" class="oe_edit_only"/>
+                            <h2><field name="code"/></h2>
+                        </div>
+                        <div class="oe_right oe_button_box" name="buttons">
+                        </div>
+                        <notebook>
+                            <page string="Information" invisible="1">
+                                <group>
+                                    <group>
+                                        <field name="volume"/>
+                                        <field name="weight"/>
+                                        <field name="weight_net"/>
+                                    </group>
+                                    <group>
+                                        <field name="color"/>
+                                        <field name="active"/>
+                                    </group>
+                                   
+                                </group>
+                                <field name="description" placeholder="Describe the vassel characteristics..."/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Vassel Kanban View  -->
+
+        <record model="ir.ui.view" id="container_management_kanban_view">
+            <field name="name">Vassel Kanban</field>
+            <field name="model">shipping.vassel</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="image_small"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_vignette oe_semantic_html_override">
+                                <a type="open"><img t-att-src="kanban_image('shipping.vassel', 'image_small', record.id.value)" class="oe_kanban_image"/></a>
+                                <div class="oe_kanban_details">
+                                    <h4>
+                                        <a type="open">
+                                             <t t-if="record.code.raw_value">[<field name="code"/>]</t> <field name="name"/>
+                                        </a>
+                                    </h4>
+                                    <div name="tags"/>
+                                    <ul>
+                                        <li>Net Weight: <field name="weight_net"></field></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        
+         <record id="open_view_vassel_list" model="ir.actions.act_window">
+            <field name="name">Vassels</field>
+            <field name="res_model">shipping.vassel</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="vassel_search_form_view"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new vassels.
+              </p><p>
+                With just a quick glance on the OpenERP vassels screen, you
+                can easily find all the information you need for each vassel;
+                code etc.
+              </p>
+            </field>
+        </record>
+        
+        <menuitem action="open_view_vassel_list" id="menu_open_view_vassel_list" sequence="1" 
+        parent="menu_vassel_main" />
+        
+        <record id="shipping_port_tree_view" model="ir.ui.view">
+            <field name="name">shipping.port.tree</field>
+            <field name="model">shipping.port</field>
+            <field eval="7" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Ports">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="city"/>
+                    <field name="state_id"/>
+                    <field name="country_id"/>
+                    <field name="amount_20"/>
+                    <field name="amount_40"/>
+                    <field name="company_id" groups="base.group_multi_company" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="shipping_port_form_view" model="ir.ui.view">
+            <field name="name">shipping.port.form</field>
+            <field name="model">shipping.port</field>
+            <field name="arch" type="xml">
+                <form string="Shipping Ports" version="7.0">
+                    <sheet>
+                        <field name="image_medium" widget="image" class="oe_avatar oe_left"/>
+                        <div class="oe_title">
+                            <div class="oe_edit_only">
+                                <label for="name" string="Port Name"/>
+                            </div>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                            <label for="code" class="oe_edit_only"/>
+                            <h2><field name="code"/></h2>
+                            
+                            <label for="city" class="oe_edit_only"/>
+                            <h2><field name="city"/></h2>
+                            
+                            <label for="state_id" class="oe_edit_only"/>
+                            <h2><field name="state_id"/></h2>
+                            <label for="country_id" class="oe_edit_only"/>
+                            <h2><field name="country_id"/></h2>
+                        </div>
+                        <div class="oe_right oe_button_box" name="buttons">
+                        </div>
+                        <notebook>
+                            <page string="Empty Tracking Charges">
+                                <group>
+                                    <group>
+                                        <field name="amount_20"/>
+                                        <field name="amount_40"/>
+                                    </group>
+                                    <group>
+                                        <field name="active"/>
+                                    </group>
+                                   
+                                </group>
+                                <field name="description" placeholder="Describe the port characteristics..."/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record id="port_search_form_view" model="ir.ui.view">
+            <field name="name">port.search.form</field>
+            <field name="model">shipping.port</field>
+            <field name="arch" type="xml">
+                <search string="Port">
+                   <field name="name" string="Ports" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
+                </search>
+            </field>
+        </record>
+        
+         <record id="open_view_port_list" model="ir.actions.act_window">
+            <field name="name">Ports</field>
+            <field name="res_model">shipping.port</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="port_search_form_view"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new port.
+              </p><p>
+                With just a quick glance on the OpenERP port screen, you
+                can easily find all the information you need for each port;
+                code etc.
+              </p>
+            </field>
+        </record>
+        
+        <menuitem action="open_view_port_list" id="menu_open_view_port_list" sequence="2" 
+        parent="menu_config_main" />
+        
+        <!--BL Start-->
+        <record id="shipping_bl_order_tree_view" model="ir.ui.view">
+            <field name="name">shipping.bl_order.tree</field>
+            <field name="model">shipping.bl_order</field>
+            <field eval="7" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="BL Data ">
+                    <field name="vassel_id"/>
+                    <field name="in_voyage_no"/>
+                    <field name="total_no_of_bl"/>
+                    <field name="total_no_of_container"/>
+                    <field name="company_id" groups="base.group_multi_company" invisible="1"/>
+                     <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="shipping_bl_order_form_view" model="ir.ui.view">
+            <field name="name">shipping.bl_order.form</field>
+            <field name="model">shipping.bl_order</field>
+            <field name="arch" type="xml">
+                <form string="BL Data" version="7.0">
+                	<header>
+                        <button name="button_confirm" states="draft" string="Confirm" type="object" />
+                        <button name="button_cancel" states="draft,confirmed" string="Cancel" type="object" />
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirmed" statusbar_colors='{"cancel":"red"}'/>
+                    </header>
+                    <sheet>
+                        <notebook>
+                            <page string="BL Data">
+                                <group>
+                                    <separator string="BL Data." />
+                                    <separator string="Enter BL No." />
+                                    <group>
+                                        <field name="vassel_id"/>
+                                        <field name="in_voyage_no"/>
+                                        <label for="feet_40" string="Total No. Of Containers"/>
+                                        <div>
+                                            20':  <field name="feet_40" on_change="on_change_feet_40(feet_40,feet_20)" class="oe_inline" />  +  
+                                            40': <field name="feet_20" on_change="on_change_feet_40(feet_40,feet_20)" class="oe_inline" />  =  
+                                             <field name="total_no_of_container" class="oe_inline" attrs="{'readonly':True}"/>  Total
+                                        </div>
+                                        
+                                    </group>
+                                    <group>
+                                        <field name="bl_nos"  on_change="on_change_blnos(bl_nos)" colspan="2" required="True" nolabel="1" placeholder="Please type BL no line by line."/>
+                                        <newline /> 
+                                        <field name="total_no_of_bl"/>
+                                        
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record id="shipping_bl_order_search_form_view" model="ir.ui.view">
+            <field name="name">shipping.bl_order.form</field>
+            <field name="model">shipping.bl_order</field>
+            <field name="arch" type="xml">
+                <search string="Port">
+                   <field name="vassel_id" string="Vassel Name"/>
+                   <field name="in_voyage_no" string="Vassel Name"/>
+                    <group expand="0" string="Group By...">
+                   <filter string="Vassel" context="{'group_by': 'vassel_id'}" icon="terp-stock_effects-object-colorize"/>
+                   <filter string="IN Voyage" context="{'group_by': 'in_voyage_no'}" icon="terp-stock_effects-object-colorize"/>
+                   </group>
+                </search>
+            </field>
+        </record>
+        
+         <record id="open_view_shipping_bl_order_list" model="ir.actions.act_window">
+            <field name="name">Import BL Summary</field>
+            <field name="res_model">shipping.bl_order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
+            <field name="context"> {'type':'import'} </field>
+            <field name="domain" > [('type','=','import')] </field>
+            <field name="search_view_id" ref="shipping_bl_order_search_form_view"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a Import BL Data.
+              </p><p>
+                With just a quick glance on the OpenERP Import BL data screen, you
+                can easily find all the information you need for each BL ;
+              </p>
+            </field>
+        </record>
+        
+        <menuitem action="open_view_shipping_bl_order_list" id="menu_open_view_shipping_bl_order_list" sequence="2" 
+        parent="menu_bl_main" />
+
+         <record id="open_view_shipping_bl_order_list_export" model="ir.actions.act_window">
+            <field name="name">Export BL Summary</field>
+            <field name="res_model">shipping.bl_order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
+            <field name="context"> {'type':'export'} </field>
+            <field name="domain" > [('type','=','export')] </field>
+            <field name="search_view_id" ref="shipping_bl_order_search_form_view"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a Export BL Data.
+              </p><p>
+                With just a quick glance on the OpenERP Export BL data screen, you
+                can easily find all the information you need for each BL ;
+              </p>
+            </field>
+        </record>
+
+        <menuitem action="open_view_shipping_bl_order_list_export" id="menu_open_view_shipping_bl_order_list_export" sequence="6" 
+        parent="menu_bl_main" />
+        
+        <!--BL END-->
+        
+        <!--BL Line Data Start-->
+        
+            <record id="shipping_bl_order_line_tree_view" model="ir.ui.view">
+            <field name="name">shipping.bl_order.line.tree</field>
+            <field name="model">shipping.bl_order.line</field>
+            <field eval="7" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="BL Data Line">
+					<field name="name" string="Ref"/> 
+                    <field name="vassel_id"/>
+                    <field name="first_vassel_id"/>
+                    <field name="in_voyage_no"/>
+                    <field name="bl_no" />
+                    <field name="release_status"/>
+                    <field name="etb"/>
+                    <field name="port_id"/>
+                    <field name="state"/>
+                    <field name="company_id" groups="base.group_multi_company" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="shipping_bl_order_line_form_view" model="ir.ui.view">
+            <field name="name">shipping.bl_order.line.form</field>
+            <field name="model">shipping.bl_order.line</field>
+            <field name="arch" type="xml">
+                <form string="BL Data" version="7.0">
+                    <header>
+                        <button name="button_confirm" states="draft" string="Confirm" type="object" />
+                        <button name="button_cancel" states="draft,confirmed" string="Cancel" type="object" />
+                        <button name="view_invoice" string="View Commission Invoice" states="invoiced" type="object" />
+                        <button name="print_report" attrs="{'invisible':[('type','!=','export')]}" string="Print Internal BL" states="draft,export" type="object" />
+                        <button name="print_customer_report" attrs="{'invisible':[('type','!=','export')]}" string="Print Customer BL" states="draft,export" type="object" />
+                        <button name="print_container" attrs="{'invisible':[('type','!=','export')]}" string="Print Containers List" states="export" type="object" />
+						<button name="button_release_order" states="confirmed,invoiced" string="Release Order" type="object" />                        
+                        <field name="state" widget="statusbar" statusbar_visible="draft,invoiced,export,confirmed,done"  statusbar_colors='{"cancel":"red"}'/>
+                    </header>
+                    <sheet>
+                        <group >
+                            <group name="left" ></group>
+                            <group name="right">
+                                <button string="Amendment" attrs="{'invisible':[('type','=','export')]}" name="action_view_amendment" type="object"/>
+                                <button string="BL Fees" attrs="{'invisible':[('type','!=','export')]}" name="action_bl_fees_payment" type="object"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                            	
+								<field name="name" string="Ref"/>
+								<field name="booking_id"  on_change="on_change_booking(booking_id)" attrs="{'invisible':[('type','!=','export')]}"/>
+								<field name="operator_code" />	
+	                            <field name="vassel_id"/>
+                                <field name="in_voyage_no"/>
+                                <field name="consignee"/>
+                                <field name="shipper"/>
+                                <field name="feeder_line" attrs="{'required':[('type','=','export')]}"/>
+                                <field name="notify_party"/>
+                                <field name="notify_party1"/>
+                                <field name="notify_party2"/>
+                                <label for="feet_40" string="Total Containers"/>
+                                <div>
+                                    20': <field name="total_container_20"   class="oe_inline" attrs="{'readonly':True}" />  +  
+                                    40': <field name="total_container_40" class="oe_inline" attrs="{'readonly':True}" />  =  
+                                         <field name="total_container" class="oe_inline" attrs="{'readonly':True}"/>  Total
+                                </div>
+                            </group>
+                            <group>
+                                <field name="bl_no" on_change="on_change_bl_line(vassel_id,in_voyage_no,bl_no)"/>
+                                <field name="bl_date"/>
+                                <field name="first_vassel_id" attrs="{'invisible':[('type','!=','import')]}"/>
+                                <field name="first_in_voyage_no" attrs="{'invisible':[('type','!=','import')]}"/>
+                                <field name="release_status"/>
+                                <field name="etb"/>
+                                <field name="port_id"/>
+                                <field name="port_of_loading_id" attrs="{'required':[('type','=','import')]}"/>
+                                <field name="port_of_delivery_id" attrs="{'required':[('type','=','export')]}"/>
+                                <field name="freetime_exception"/>
+                                <field name="type" invisible="1"/>
+                                <field name="payable_at"/>
+                                <field name="prepaid_at"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="BL Data Line" attrs="{'invisible':[('type','=','export')]}">
+                                <group>
+                                    <group>
+                                        <separator string="Add Containers" />
+                                        <field name="container_lines" colspan="4" nolabel="1">
+                                            <tree editable="bottom" string="Container lines">
+                                                <field name="prefix"/>
+                                                <field name="digit6"/>
+                                                <field name="check1"/>
+                                                <field name="feet_40"/>
+                                                <field name="feet_20"/>
+                                                <field name="high_cube"/>
+                                                <field name="pack_type"/>
+                                                <field name="type"/>
+                                            </tree>
+                                            <form string="Container lines" version="7.0">
+                                                <group col="4">
+                                                    <field name="prefix"/>
+                                                    <field name="digit6"/>
+                                                    <field name="check1"/>
+                                                    <field name="feet_40"/>
+                                                    <field name="feet_20"/>
+                                                    <field name="high_cube"/>
+                                                    <field name="pack_type"/>
+                                                    <field name="type"/>
+                                                </group>
+                                            </form>
+                                        </field>
+                                    </group>
+                                    <group attrs="{'invisible':['|',('container_lines','=',[]), ('container_lines','=',False)]}">
+                                        <separator string="Add Cargos" />                                  
+                                        <field name="cargo_lines" colspan="4" nolabel="1">
+                                            <form string="Cargo lines" version="7.0">
+                                                <group> 
+                                                    
+                                                    <group >
+                                                        <field name="name"/>
+                                                        <field name="type"/>
+                                                        <field name="container_id" domain="[('ship_line_id','=',parent.id)]"/>
+                                                        <label for="quantity" string="Quantity"/>
+                                                        <div>
+                                                            <field name="quantity" class="oe_inline" />
+                                                            <field name="uom" width="40px" class="oe_inline" />
+                                                        </div>
+                                                        <label for="gross_weight"/>
+                                                        <div>
+                                                            <field name="gross_weight" class="oe_inline" />
+                                                            <field name="weight_uom" class="oe_inline oe_no_button" />
+                                                        </div>
+                                                        <label for="measurement"/>
+                                                            <div>
+                                                                <field name="measurement" class="oe_inline" />
+                                                                <field name="measurement_uom" class="oe_inline oe_no_button" />
+                                                            </div>
+                                                        
+                                                    </group>
+                                                    <group >
+                                                        <field name="cargo_description"/>
+                                                    </group >
+                                                </group>
+                                            </form>
+                                            <tree string="Cargo lines">
+                                                <field name="name"/>
+                                                <field name="type" string="Type"/>
+                                                 <field name="quantity"/>
+                                                <field name="uom" string=""/>
+                                                <field name="gross_weight"/>
+                                                <field name="weight_uom" string=""/>
+                                                <field name="measurement"/>
+                                                <field name="measurement_uom" string=""/>
+                                            </tree>
+                                        </field>
+                                        
+                                    </group>
+                                </group>
+                                <group >
+                                    <separator string="Add Freight" />                                  
+                                    <field name="freight_lines" colspan="4" nolabel="1">
+                                        <form string="Freight" version="7.0">
+                                            <group> 
+                                                <group >
+                                                    <field name="name" domain="[('freight','=',True)]"/>
+                                                    <field name="currency_id"/>
+                                                    <field name="amount"/>
+                                                </group >
+                                                <group >
+                                                    <field name="quantity"/>
+                                                    <field name="per"/>
+                                                    <field name="net_amount"/>
+                                                    <field name="freight_term"/>
+                                                </group >
+                                            </group>
+                                        </form>
+                                        <tree string="Freight lines">
+                                            <field name="name" domain="[('freight','=',True)]"/>
+                                            <field name="currency_id"/>
+                                            <field name="amount"/>
+                                            <field name="quantity"/>
+                                            <field name="per"/>
+                                            <field name="net_amount"/>
+                                            <field name="freight_term"/>
+                                            
+                                            <button name="freight_payment" attrs="{'invisible': [('freight_term','=','prepaid')]}"
+                                            icon="STOCK_REDO" string="View Payment" type="object"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                            </page>
+                            <page string="Export Lines" attrs="{'invisible':[('type','=','import')]}" >
+                                <group>
+                                    <group>
+                                        <separator string="Add Containers" />
+                                        <field name="export_container_lines" colspan="4" nolabel="1">
+                                            <tree editable="bottom" string="Container lines">
+                                                <field name="container_id"/>
+                                                <field name="seal_no"/>
+                                            </tree>
+                                            <form string="Container lines" version="7.0">
+                                                <group col="4">
+                                                    <field name="container_id"/>
+                                                    <field name="seal_no"/>
+                                                </group>
+                                            </form>
+                                        </field>
+                                    </group>
+                                    <group >
+                                        <separator string="Add Cargos" />                                  
+                                        <field name="export_cargo_lines" colspan="4" nolabel="1">
+                                            <form string="Cargo lines" version="7.0">
+                                                <group> 
+                                                    
+                                                    <group >
+                                                        <field name="name"  />
+                                                        <field name="type"/>
+                                                        <field name="container_id" />
+                                                        <label for="quantity" string="Quantity"/>
+                                                        <div>
+                                                            <field name="quantity" class="oe_inline" />
+                                                            <field name="uom" width="40px" class="oe_inline" />
+                                                        </div>
+                                                        <label for="gross_weight"/>
+                                                        <div>
+                                                            <field name="gross_weight" class="oe_inline" />
+                                                            <field name="weight_uom" class="oe_inline oe_no_button" />
+                                                        </div>
+                                                        <label for="measurement"/>
+                                                            <div>
+                                                                <field name="measurement" class="oe_inline" />
+                                                                <field name="measurement_uom" class="oe_inline oe_no_button" />
+                                                            </div>
+                                                        
+                                                    </group>
+                                                    <group >
+                                                        <field name="cargo_description" />
+                                                    </group >
+                                                </group>
+                                            </form>
+                                            <tree string="Cargo lines">
+                                                <field name="name"/>
+                                                <field name="type" string="Type"/>
+                                                <field name="quantity"/>
+                                                <field name="container_id" />
+                                                <field name="uom" string=""/>
+                                                <field name="gross_weight"/>
+                                                <field name="weight_uom" string=""/>
+                                                <field name="measurement"/>
+                                                <field name="measurement_uom" string=""/>
+                                            </tree>
+                                        </field>
+                                    </group>
+                                </group>
+                                <group >
+                                    <separator string="Add Freight" />                                  
+                                    <field name="export_freight_lines" attrs="{'readonly': [('state','=','done')]}" colspan="4" nolabel="1">
+                                        <form string="Freight" version="7.0">
+                                            <group> 
+                                                <group >
+                                                    <field name="name" domain="[('freight','=',True)]"/>
+                                                    <field name="currency_id"/>
+                                                    <field name="amount"/>
+                                                </group >
+                                                <group >
+                                                    <field name="quantity"/>
+                                                    <field name="per"/>
+                                                    <field name="net_amount"/>
+                                                    <field name="freight_term"/>
+                                                </group >
+                                            </group>
+                                        </form>
+                                        <tree string="Freight lines">
+                                            <field name="name" domain="[('freight','=',True)]"/>
+                                            <field name="currency_id"/>
+                                            <field name="amount"/>
+                                            <field name="quantity"/>
+                                            <field name="per"/>
+                                            <field name="net_amount"/>
+                                            <field name="freight_term"/>
+                                            <field name="payment_id" attrs="{'invisible': [('freight_term','=','collect')]}"/>
+                                            
+                                            <button name="freight_payment" attrs="{'invisible': [('freight_term','=','collect')]}"
+                                            icon="STOCK_REDO" string="View Payment" type="object"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                            </page>
+                            
+                        </notebook>
+                        <group class="oe_subtotal_footer oe_right" colspan="2" name="bl_total">
+                            <field name="total_quantity"  widget='monetary'/>
+                            <field name="gross_weight" widget='monetary'/>
+                            <field name="measurement" widget='monetary' />
+                        </group>
+                        <field name="description" placeholder="Remark..."/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record id="shipping_bl_order_line_search_form_view" model="ir.ui.view">
+            <field name="name">shipping.bl_order.line.form</field>
+            <field name="model">shipping.bl_order.line</field>
+            <field name="arch" type="xml">
+                <search string="BL Order Lines">
+                   <field name="vassel_id" string="Vassel Name"/>
+                   <field name="bl_no" string="BL NOs"/>
+                   <field name="in_voyage_no" string="Vassel Name"/>
+                   <field name="port_id" string="Port Name"/>
+                   <group expand="0" string="Group By...">
+                   <filter string="RO Paid" domain="[('ro_id','!=',None)]" icon="terp-camera_test"/>
+                   <filter string="RO to Receive" domain="[('ro_id','=',None)]" icon="terp-camera_test"/>
+                   <filter string="Vassel" context="{'group_by': 'vassel_id'}" icon="terp-stock_effects-object-colorize"/>
+                   <filter string="IN Voyage" context="{'group_by': 'in_voyage_no'}" icon="terp-stock_effects-object-colorize"/>
+                   </group>
+                </search>
+            </field>
+        </record>
+        
+         <record id="open_view_shipping_bl_order_line_list" model="ir.actions.act_window">
+            <field name="name">Import BL Detail</field>
+            <field name="res_model">shipping.bl_order.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context"> {'type':'import'} </field>
+            <field name="domain" > [('type','=','import')] </field>
+            <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="shipping_bl_order_line_search_form_view"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a Import BL Data Line.
+              </p><p>
+                With just a quick glance on the OpenERP Import  BL data line screen, you
+                can easily find all the information you need for each BL line;
+              </p>
+            </field>
+        </record>
+        
+        <menuitem action="open_view_shipping_bl_order_line_list" id="menu_open_view_shipping_bl_order_line_list" sequence="3" 
+        parent="menu_bl_main" />
+        
+        <record id="open_view_shipping_bl_order_line_list_export" model="ir.actions.act_window">
+            <field name="name">Export BL Detail</field>
+            <field name="res_model">shipping.bl_order.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context"> {'type':'export'} </field>
+            <field name="domain" > [('type','=','export')] </field>
+            <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="shipping_bl_order_line_search_form_view"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a Export BL Data Line.
+              </p><p>
+                With just a quick glance on the OpenERP Export BL data line screen, you
+                can easily find all the information you need for each BL line;
+              </p>
+            </field>
+        </record>
+        
+        <menuitem action="open_view_shipping_bl_order_line_list_export" id="menu_open_view_shipping_bl_order_line_list_export" sequence="6" 
+        parent="menu_bl_main" />
+        <!--BL Line Data End-->
+        
+        
+        <!--PO Request View Start -->
+        <record id="po_request_view_search_form_view" model="ir.ui.view">
+            <field name="name">po.request.view.search</field>
+            <field name="model">po.request.view</field>
+            <field name="arch" type="xml">
+                <search string="PO Request">
+                   <field name="bl_no" string="BL NOs"/>
+                   <field name="agent_cd" string="Agent CD"/>
+                   <field name="sub_agent_cd" string="Sub Agent_CD"/>
+                   <field name="port_of_loading_id" string="Port Name"/>
+                    <group expand="0" string="Group By...">
+                   <filter string="Date" context="{'group_by': 'bl_date'}" icon="terp-stock_effects-object-colorize"/>
+                   <filter string="Month" context="{'group_by': 'bl_month'}" icon="terp-stock_effects-object-colorize"/>
+                   <filter string="Year" context="{'group_by': 'bl_year'}" icon="terp-stock_effects-object-colorize"/>
+                   <filter string="Account" context="{'group_by': 'account_id'}" icon="terp-stock_effects-object-colorize"/>
+                   </group>
+                </search>
+            </field>
+        </record>
+        
+         <record id="po_request_view_tree_view" model="ir.ui.view">
+            <field name="name">po.request.view.tree</field>
+            <field name="model">po.request.view</field>
+            <field eval="7" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="BL Data Line">
+					<field name="name"  /> 
+                    <field name="agent_cd"/>
+                    <field name="sub_agent_cd"/>
+                    <field name="bl_no"/>
+                    <field name="operator_code" />
+                    <field name="line"/>
+                    <field name="vassel"/>
+                    <field name="voyage"/>
+                    <field name="port_of_loading_id"/>
+                    <field name="account_id"/>
+                    <field name="currency_id"/>
+                    <field name="bl_date"/>
+                    <field name="bl_month" invisible="1"/>
+                    <field name="bl_year" invisible="1"/>
+                    <field name="quantity"/>
+                    <field name="unit_price"/>
+                    <field name="uoc"/>
+                </tree>
+            </field>
+        </record>
+
+         <record id="open_po_request_view_list" model="ir.actions.act_window">
+            <field name="name">PO Request</field>
+            <field name="res_model">po.request.view</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="po_request_view_search_form_view"/>
+            <field name="help" type="html">
+              
+            </field>
+        </record>
+        
+        <menuitem action="open_po_request_view_list" id="menu_open_po_request_view_list" sequence="3" 
+        parent="menu_shipping_reporting" />
+        
+        <!--PO Request View End-->
+        
+       <record id="view_inward_commission" model="ir.ui.view">
+            <field name="name">inward.commission.form</field>
+            <field name="model">inward.commission</field>
+            <field name="type">form</field>  
+            <field name="arch" type="xml">
+             <form string="Inward Commission" version="7.0">
+             <group>
+             	<group>
+             		<field name="date" />
+             	</group>
+             	<group>
+             		<field name="output_type" />
+             	</group>
+			</group>
+                <footer>
+                    <button name="print_report" string="Print" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+            </field>
+        </record>
+
+        <record id="action_inward_commission" model="ir.actions.act_window">
+            <field name="name">In-ward Commission Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+             <field name="view_mode">form</field>
+             <field name="view_id" ref="view_inward_commission"/>            
+            <field name="res_model">inward.commission</field>            
+            <field name="target">new</field>
+         </record>
+            
+		 <menuitem action="action_inward_commission" id="menu_inward_commission" 
+        	parent="menu_shipping_reporting" />   
+        	
+       <record id="view_po_request" model="ir.ui.view">
+            <field name="name">po.request.form</field>
+            <field name="model">po.request</field>
+            <field name="type">form</field>  
+            <field name="arch" type="xml">
+             <form string="PO Request" version="7.0">
+             <group>
+             	<group>
+             		<field name="date" />
+             	</group>
+             	<group>
+             		<field name="output_type" />
+             	</group>
+			</group>
+                <footer>
+                    <button name="print_report" string="Print" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+            </field>
+        </record>
+
+        <record id="action_po_request" model="ir.actions.act_window">
+            <field name="name">PO Request Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+             <field name="view_mode">form</field>
+             <field name="view_id" ref="view_inward_commission"/>            
+            <field name="res_model">po.request</field>            
+            <field name="target">new</field>
+         </record>
+            
+		 <menuitem action="action_po_request" id="menu_po_request" 
+        	parent="menu_shipping_reporting" sequence="3" />     
+    
+    <!-- Container Inventory Start -->
+        
+        <record id="shipping_container_inventory_search_form_view" model="ir.ui.view">
+            <field name="name">shipping.container.inventory.search</field>
+            <field name="model">shipping.container.inventory</field>
+            <field name="arch" type="xml">
+                <search string="PO Request">
+                   <field name="name" string="Container"/>
+                   <field name="in_date" string="IN-DATE"/>
+                   <field name="out_date" string="OUT-DATE"/>
+                   <field name="vassel_id" string="Vassel Name"/>
+                   <field name="state" string="State"/>
+                    <group expand="0" string="Group By...">
+                   <filter string="State" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
+                   </group>
+                </search>
+            </field>
+        </record>
+        
+        <record id="shipping_container_inventory_tree_view" model="ir.ui.view">
+            <field name="name">shipping.container.inventory.tree</field>
+            <field name="model">shipping.container.inventory</field>
+            <field eval="7" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Container Inventory Tree">
+					<field name="name"  /> 
+					<field name="in_date"  /> 
+					<field name="out_date"  /> 
+					<field name="vassel_id"  /> 
+					<field name="shipper"  /> 
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="shipping_container_inventory_form_view" model="ir.ui.view">
+            <field name="name">shipping.container.inventory.form</field>
+            <field name="model">shipping.container.inventory</field>
+            <field name="type">form</field>  
+            <field name="arch" type="xml">
+             <form string="Container Inventory Form" version="7.0">
+                <sheet>
+                     <group>
+                     	<group>
+                     		<field name="name" /> 
+					        <field name="in_date" /> 
+                     	</group>
+                     	<group>
+                     		<field name="out_date" /> 
+					        <field name="vassel_id" /> 
+					        <field name="shipper" /> 
+                     	</group>
+			        </group>
+                    <notebook>
+                        <page string="Movenent History">
+                            <field name='inventory_lines' >
+                                <tree string='Lines' >
+                                    <field name="name"  /> 
+                                    <field name="in_date"  /> 
+                                    <field name="out_date"  /> 
+                                    <field name="vassel_id"  /> 
+                                    <field name="shipper"  /> 
+                                    <field name="move_type"  /> 
+                                    <field name="bl_id"  /> 
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+
+		        </sheet>
+            </form>
+            </field>
+        </record>
+        
+         <record id="open_shipping_container_inventory_list" model="ir.actions.act_window">
+            <field name="name">TE List</field>
+            <field name="res_model">shipping.container.inventory</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_state':'TE'}</field>
+            <field name="search_view_id" ref="shipping_container_inventory_search_form_view"/>
+            <field name="help" type="html">
+              
+            </field>
+        </record>
+        
+        <menuitem action="open_shipping_container_inventory_list" 
+            id="menu_open_shipping_container_inventory_list" sequence="3" 
+            parent="menu_container_main" />
+        
+        <record id="open_shipping_cll" model="ir.actions.act_window">
+            <field name="name">CLL</field>
+            <field name="res_model">shipping.container.inventory</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+             <field name="domain">[('state','in',('VF','VE'))]</field>
+            <field name="search_view_id" ref="shipping_container_inventory_search_form_view"/>
+            <field name="help" type="html">
+              
+            </field>
+        </record>
+        
+        <menuitem action="open_shipping_cll" 
+            id="menu_open_shipping_cll" sequence="4" 
+            parent="menu_container_main" />
+            
+    <!-- Container Inventory End -->
+    
+    <!--Amendment Start -->
+    <record id="shipping_bl_order_line_amendment_search_form_view" model="ir.ui.view">
+            <field name="name">shipping.bl_order.line.amendment.search.form</field>
+            <field name="model">shipping.bl_order.line.amendment</field>
+            <field name="arch" type="xml">
+                <search string="Amendment">
+                   <field name="ship_line_id" string="BL No"/>
+                    <group expand="0" string="Group By...">
+                   <filter string="BL No" context="{'group_by': 'ship_line_id'}" icon="terp-stock_effects-object-colorize"/>
+                   </group>
+                </search>
+            </field>
+        </record>
+        
+     <record id="shipping_bl_order_line_amendment_tree_view" model="ir.ui.view">
+            <field name="name">shipping.bl_order.line.amendment.tree</field>
+            <field name="model">shipping.bl_order.line.amendment</field>
+            <field eval="7" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Amendment Lines">
+					<field name="name" string="Ref"/> 
+                    <field name="changes"/>
+                    <field name="change_count" />  
+                    <field name="ship_line_id"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="shipping_bl_order_line_amendment_form_view" model="ir.ui.view">
+            <field name="name">shipping.bl_order.line.amendment.form</field>
+            <field name="model">shipping.bl_order.line.amendment</field>
+            <field name="type">form</field>  
+            <field name="arch" type="xml">
+             <form string="Amendment Form" version="7.0">
+                <header>
+                    <button name="button_cancel" states="draft,confirmed" string="Cancel" type="object" />
+                    <button name="button_am_receipt_invoice"  string="Print Invoice" type="object" />
+                    <button name="button_receive" states="draft" string="Received" type="object" />
+                    <field name="state" widget="statusbar" statusbar_visible="draft,received"  statusbar_colors='{"cancel":"red"}'/>
+                </header>
+                <sheet>
+                     <group>
+                     	<group>
+                     		<field name="name" />
+                     		<field name="change_count" />  
+                     		<field name="date" />
+                     	</group>
+                     	<group>
+                     	    <field name="received_by" /> 
+					        <field name="ship_line_id" /> 
+					        <field name="amount" /> 
+                     	</group>
+			        </group>
+                    <notebook>
+                        <page string="Amendments">
+                            <field name='changes' >
+                            </field>
+                        </page>
+                    </notebook>
+		        </sheet>
+            </form>
+            </field>
+            
+        </record>
+        
+        <record id="open_shipping_bl_order_line_amendment" model="ir.actions.act_window">
+            <field name="name">Amendments</field>
+            <field name="res_model">shipping.bl_order.line.amendment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+             <field name="domain">[]</field>
+            <field name="search_view_id" ref="shipping_bl_order_line_amendment_search_form_view"/>
+            <field name="help" type="html">
+            </field>
+        </record>
+        
+        <menuitem action="open_shipping_bl_order_line_amendment" 
+            id="menu_open_shipping_bl_order_line_amendment" sequence="5" 
+            parent="menu_container_main" />
+            
+        <!--Amendment End -->
+</data>
+</openerp>

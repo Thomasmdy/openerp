@@ -1,0 +1,462 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="release_order_report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="432"/>
+	<style name="style1" forecolor="#000000" fill="Solid" isBlankWhenNull="false" fontName="Zawgyi-One" fontSize="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="/usr/share/fonts/zawgyi/Zawgyi-One_v4.30_November_14_20.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/home/kartoon-erp/businessauto/server-7.0/openerp/addons/container_management/report/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="param_obj" class="java.lang.Object"/>
+	<parameter name="parm" class="java.lang.String"/>
+	<parameter name="rec_name" class="java.lang.String"/>
+	<parameter name="nrc" class="java.lang.String"/>
+	<parameter name="tel" class="java.lang.String"/>
+	<parameter name="ro_date" class="java.lang.String"/>
+	<parameter name="rec_no" class="java.lang.String"/>
+	<parameter name="org" class="java.lang.String"/>
+	<queryString language="xPath">
+		<![CDATA[/data]]>
+	</queryString>
+	<field name="BL_Date-bl_date" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/BL_Date-bl_date]]></fieldDescription>
+	</field>
+	<field name="BL_No-bl_no" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/BL_No-bl_no]]></fieldDescription>
+	</field>
+	<field name="Company_Name-name" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Company-company_id/Company_Name-name]]></fieldDescription>
+	</field>
+	<field name="Name-name" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Consignee-consignee/Name-name]]></fieldDescription>
+	</field>
+	<field name="Name-name2" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Shipper-shipper/Name-name]]></fieldDescription>
+	</field>
+	<field name="Name-name3" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Notify_Party-notify_party/Name-name]]></fieldDescription>
+	</field>
+	<field name="Name-name4" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Notify_Party1-notify_party1/Name-name]]></fieldDescription>
+	</field>
+	<field name="Name-name5" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Notify_Party2-notify_party2/Name-name]]></fieldDescription>
+	</field>
+	<field name="Name-name6" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Vassel_Name-vassel_id/Name-name]]></fieldDescription>
+	</field>
+	<field name="Release_Status-release_status" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Release_Status-release_status]]></fieldDescription>
+	</field>
+	<field name="Name-name7" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Name-name]]></fieldDescription>
+	</field>
+	<field name="Name-name8" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Feeder_Operator-feeder_line/Name-name]]></fieldDescription>
+	</field>
+	<field name="Container_Lines-container_lines" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Container_Lines-container_lines]]></fieldDescription>
+	</field>
+	<field name="id" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/id]]></fieldDescription>
+	</field>
+	<field name="Operator_Code-operator_code" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Operator_Code-operator_code]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" x="1" y="5" width="542" height="15" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DZ CONTAINER SERVICES CO.,LTD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" x="1" y="20" width="542" height="15" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NO.(446/D),7th Floor Merchant Street,Botahuaung Township]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="204" splitType="Stretch">
+			<staticText>
+				<reportElement x="1" y="0" width="145" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[The Manager]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="1" y="13" width="145" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Name-name8}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="27" width="145" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Yangon]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="40" width="145" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Ref]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="53" width="145" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Subject]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="147" y="53" width="145" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Requese to Release Cargo]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="147" y="38" width="145" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Name-name7}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="68" width="352" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[We are pleased to request you to release below cargo to consignee ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="354" y="68" width="77" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Release_Status-release_status}+" of K line B/L"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="83" width="145" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[B/L NO.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="98" width="145" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Shipper]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="113" width="145" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Consignee]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="128" width="145" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Notify]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="143" width="145" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Notify 1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="158" width="145" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Notify 2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="173" width="145" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Vessel]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="147" y="83" width="145" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{BL_No-bl_no}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="147" y="113" width="145" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Name-name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="147" y="128" width="145" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Name-name3}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="147" y="143" width="145" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Name-name4}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="147" y="158" width="145" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Name-name5}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="147" y="173" width="145" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Name-name6}]]></textFieldExpression>
+			</textField>
+			<elementGroup>
+				<elementGroup>
+					<textField>
+						<reportElement x="147" y="98" width="145" height="15"/>
+						<textElement>
+							<font size="10" isBold="false"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{Name-name2}]]></textFieldExpression>
+					</textField>
+				</elementGroup>
+			</elementGroup>
+			<staticText>
+				<reportElement x="1" y="188" width="145" height="15"/>
+				<textElement/>
+				<text><![CDATA[Container No.]]></text>
+			</staticText>
+			<subreport isUsingCache="false" runToBottom="false">
+				<reportElement x="147" y="188" width="409" height="15"/>
+				<subreportParameter name="parm">
+					<subreportParameterExpression><![CDATA[$F{id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<dataSourceExpression><![CDATA[$P{param_obj}]]></dataSourceExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "release_order_subreport.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</columnHeader>
+	<columnFooter>
+		<band height="144" splitType="Stretch">
+			<staticText>
+				<reportElement x="1" y="0" width="145" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Operator Code:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="15" width="555" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Pls collect relevant storage charges before release.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="147" y="0" width="145" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Operator_Code-operator_code}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="30" width="555" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Thanking you.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="45" width="555" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Best regards,]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="1" y="60" width="555" height="15"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Company_Name-name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="75" width="211" height="15"/>
+				<textElement textAlignment="Left">
+					<font fontName="Zawgyi-One" size="8" isBold="true" isItalic="false" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[CONSIGNEE မ်ားသိေစရန္။]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="114" width="65" height="12"/>
+				<textElement textAlignment="Left">
+					<font fontName="Zawgyi-One" size="8" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Operator Code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="style1" x="1" y="128" width="555" height="15"/>
+				<textElement textAlignment="Left">
+					<font fontName="Zawgyi-One" size="10" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[K LINE သို့ DETENTION LAST DATE (91) တံဆိပ္တုံးလာထုရန္။]]></text>
+			</staticText>
+			<line>
+				<reportElement x="1" y="87" width="161" height="1"/>
+			</line>
+			<textField>
+				<reportElement x="67" y="113" width="145" height="15"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Operator_Code-operator_code}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="style1" x="1" y="99" width="549" height="12"/>
+				<textElement textAlignment="Left">
+					<font fontName="Zawgyi-One" size="8" isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[ကုန္ေသတဿတာ အခြန္(မ်ား) ကို [ ICD2 ]သို့ျပန္လည္ပို့္ေပးပါရန္။]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="188">
+			<staticText>
+				<reportElement x="1" y="0" width="70" height="15"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Received]]></text>
+			</staticText>
+			<line>
+				<reportElement x="1" y="16" width="70" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="1" y="25" width="36" height="15"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="40" width="36" height="15"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NRC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="55" width="36" height="15"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tel]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="38" y="55" width="10" height="15"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="38" y="25" width="10" height="15"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="38" y="40" width="10" height="15"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="50" y="56" width="162" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{tel}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="50" y="40" width="162" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{nrc}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="50" y="25" width="162" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{rec_name}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd-MMM-yy" isBlankWhenNull="true">
+				<reportElement x="390" y="25" width="162" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{ro_date}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="313" y="25" width="64" height="15"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RO Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="378" y="25" width="10" height="15"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<textField pattern="dd-MMM-yy" isBlankWhenNull="true">
+				<reportElement x="389" y="42" width="162" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{rec_no}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="377" y="42" width="10" height="15"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="313" y="42" width="63" height="15"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Receipt No]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>

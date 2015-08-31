@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="release_order_sql" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="297a4dee-c671-44df-ab9f-5317cc64267e">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="24"/>
+	<property name="ireport.y" value="480"/>
+	<style name="style1" forecolor="#000000" fill="Solid" isBlankWhenNull="false" fontName="Zawgyi-One" fontSize="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="/usr/share/fonts/zawgyi/Zawgyi-One_v4.30_November_14_20.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/home/hms/businessauto/modules_internal7/container_management/report/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="company_name" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["DZ CONTAINER SERVICES CO., LTD."]]></defaultValueExpression>
+	</parameter>
+	<parameter name="address" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["NO.446, 7FL, Merchant Road, Yangon, Myanmar"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="tel_fax" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["Tel/Fax: 951-240622,240511, 392200, 392300."]]></defaultValueExpression>
+	</parameter>
+	<parameter name="date" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["03/13/2015"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="user_name" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["NAW HSAR LAR MAY"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="booking_id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[4]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select bk.*, sv.vassel_name, s_par.shipper_name, c_par.consignee_name,
+s_par.shipper_name  from
+(
+select id, coalesce(feet_40,0) feet_40 , coalesce(feet_20,0) feet_20, vassel_id, name, container_yard, total_no_of_container, voyage_no, operator_code, destination, commodity, consignee, date, shipper, etd from shipping_booking
+where id=$P{booking_id}) bk
+left join (select id, name vassel_name from shipping_vassel) sv on bk.vassel_id = sv.id
+left join (select id, name shipper_name from res_partner) s_par on  bk.shipper = s_par.id
+left join (select id, name consignee_name from res_partner) c_par on  bk.consignee = c_par.id]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer"/>
+	<field name="feet_40" class="java.lang.Integer">
+		<fieldDescription><![CDATA[40']]></fieldDescription>
+	</field>
+	<field name="feet_20" class="java.lang.Integer">
+		<fieldDescription><![CDATA[20']]></fieldDescription>
+	</field>
+	<field name="vassel_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Vassel Name]]></fieldDescription>
+	</field>
+	<field name="name" class="java.lang.String"/>
+	<field name="container_yard" class="java.lang.String">
+		<fieldDescription><![CDATA[Container Yard]]></fieldDescription>
+	</field>
+	<field name="total_no_of_container" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Total No of Container(s)]]></fieldDescription>
+	</field>
+	<field name="voyage_no" class="java.lang.String">
+		<fieldDescription><![CDATA[Voyage No]]></fieldDescription>
+	</field>
+	<field name="operator_code" class="java.lang.String"/>
+	<field name="destination" class="java.lang.String">
+		<fieldDescription><![CDATA[Destination]]></fieldDescription>
+	</field>
+	<field name="commodity" class="java.lang.String">
+		<fieldDescription><![CDATA[Commodity]]></fieldDescription>
+	</field>
+	<field name="consignee" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Consignee]]></fieldDescription>
+	</field>
+	<field name="date" class="java.sql.Date">
+		<fieldDescription><![CDATA[End Date]]></fieldDescription>
+	</field>
+	<field name="shipper" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Shipper]]></fieldDescription>
+	</field>
+	<field name="etd" class="java.sql.Date">
+		<fieldDescription><![CDATA[ETD]]></fieldDescription>
+	</field>
+	<field name="vassel_name" class="java.lang.String"/>
+	<field name="shipper_name" class="java.lang.String"/>
+	<field name="consignee_name" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="102" splitType="Stretch">
+			<textField>
+				<reportElement uuid="5797a787-899a-4467-a041-b5d01c3262e5" x="0" y="8" width="555" height="43"/>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="19" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{company_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="365b799a-6d11-48c5-9f87-7c6997b87070" x="0" y="28" width="555" height="43"/>
+				<textElement textAlignment="Center">
+					<font fontName="Kinnari" size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{address}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="728dd500-f575-4201-bd16-f7da2809db43" x="0" y="49" width="555" height="43"/>
+				<textElement textAlignment="Center">
+					<font fontName="Kinnari" size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{tel_fax}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="a66cb5aa-8119-4afb-945c-ca257f587a41" x="0" y="96" width="555" height="1"/>
+			</line>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="461" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="d38739d4-d3d6-4296-80f8-cf450d398dbc" x="0" y="21" width="182" height="15"/>
+				<textElement>
+					<font fontName="Serif" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Subject : Cargo Space Booking]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4cb1769a-895a-471b-848a-63afc2ce94e8" x="0" y="4" width="132" height="15"/>
+				<textElement>
+					<font fontName="Serif" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[ATTN: BOOKING SECTION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="0b8262c4-ec75-4bdd-ab7e-139f5da11b5e" x="0" y="36" width="117" height="20"/>
+				<textElement>
+					<font fontName="Serif" size="9"/>
+				</textElement>
+				<text><![CDATA[Dear Sir / Madam,]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5cb8454a-24ef-49a8-a41f-892935d119da" x="49" y="63" width="438" height="20"/>
+				<textElement>
+					<font fontName="Serif" size="9"/>
+				</textElement>
+				<text><![CDATA[We are pleased to request your kind space allocation for following.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="717155e6-ee3f-4458-b8b0-bfeef952febd" x="1" y="88" width="117" height="15"/>
+				<textElement>
+					<font fontName="Serif" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[1. Shipper]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="e48c61bf-cda7-40c9-b1ed-b4f3660b354c" x="1" y="128" width="117" height="15"/>
+				<textElement>
+					<font fontName="Serif" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[3. Vassel]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="7c5dd2f3-f430-4efa-9ea5-1193406553e2" x="1" y="108" width="117" height="15"/>
+				<textElement>
+					<font fontName="Serif" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[2. Consignee]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2e7ab20d-389d-4d1c-afa1-2e28bb177acf" x="1" y="148" width="117" height="15"/>
+				<textElement>
+					<font fontName="Serif" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[4. Voyage]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6df306ce-9ae9-4e6a-88ae-5905cad01ba1" x="1" y="168" width="117" height="15"/>
+				<textElement>
+					<font fontName="Serif" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[5. Volume]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="1d9cac45-9dc1-4e16-b938-3f6d9c066711" x="1" y="269" width="117" height="15"/>
+				<textElement>
+					<font fontName="Serif" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[10. Container Number]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c68cfe94-6c02-4203-9f7f-c80a972bceb9" x="1" y="209" width="117" height="15"/>
+				<textElement>
+					<font fontName="Serif" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[7. Destination]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3dce8f2e-b32f-4597-ba84-fe01fc10439c" x="1" y="229" width="117" height="15"/>
+				<textElement>
+					<font fontName="Serif" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[8. Operator]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ecae26e0-ef2f-4cd4-b766-b657135a9994" x="1" y="188" width="117" height="15"/>
+				<textElement>
+					<font fontName="Serif" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[6. Commodity]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="42a4bf9c-0c31-4277-ae07-f3a0b6974775" x="1" y="249" width="117" height="15"/>
+				<textElement>
+					<font fontName="Serif" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[9. Container Yard]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="e3c726dd-ae87-4bae-9613-98466a4c2bb1" x="116" y="88" width="5" height="15"/>
+				<textElement>
+					<font fontName="Serif" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="8ef02f49-a80d-4b8e-b40f-ac254aa89c9c" x="116" y="108" width="5" height="15"/>
+				<textElement>
+					<font fontName="Serif" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ea05e26e-6b1b-41a9-8c42-4e8438451b11" x="116" y="128" width="5" height="15"/>
+				<textElement>
+					<font fontName="Serif" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6e82f314-5c48-4283-87d0-155c4c308d5f" x="116" y="148" width="5" height="15"/>
+				<textElement>
+					<font fontName="Serif" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d154181f-ec38-4e8e-9197-eea05a7ccd28" x="116" y="168" width="5" height="15"/>
+				<textElement>
+					<font fontName="Serif" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a54b7bd6-05e2-445c-934f-abc010ab0edb" x="116" y="229" width="5" height="15"/>
+				<textElement>
+					<font fontName="Serif" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5a2769ec-1ba5-4e16-876e-755fc239d88e" x="116" y="269" width="5" height="15"/>
+				<textElement>
+					<font fontName="Serif" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a9d6e541-0ae3-42de-9fa3-f7ada6ac5ddf" x="116" y="209" width="5" height="15"/>
+				<textElement>
+					<font fontName="Serif" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="71a1c66e-85b3-49d3-b2f2-f30d1d8145a2" x="116" y="249" width="5" height="15"/>
+				<textElement>
+					<font fontName="Serif" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="be8ab647-ff33-464a-87de-a5989b5c1ddc" x="116" y="188" width="5" height="15"/>
+				<textElement>
+					<font fontName="Serif" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="0e6ee527-40da-46d2-ba77-fa05d6bffed9" x="121" y="88" width="169" height="15"/>
+				<textElement markup="none">
+					<font fontName="Serif" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{shipper_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="1e536559-e599-4c43-aa33-6152f8c4f4f9" x="1" y="361" width="319" height="15"/>
+				<textElement>
+					<font fontName="Serif" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Your confirmation on this matter is highly appreciated.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="40c8a0e1-bdaf-4d7d-af3e-87abd1811d28" x="0" y="376" width="155" height="15"/>
+				<textElement>
+					<font fontName="Serif" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[With best regards,]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="189052e7-dfb9-4bf2-8231-9d4f4935fdc1" x="1" y="430" width="289" height="12"/>
+				<textElement>
+					<font fontName="Serif" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Ph: 95-1-39220,392300,240511,240622]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="69147157-6f69-4e9e-af95-82fbb81b3d8b" x="1" y="415" width="289" height="12"/>
+				<textElement>
+					<font fontName="Serif" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[DZ Container Services Co., Ltd.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="dfd694e2-48b5-4855-bd67-d761a45b2d05" x="1" y="446" width="289" height="12"/>
+				<textElement>
+					<font fontName="Serif" size="9" isBold="false" isItalic="false" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[email: marlar@mmkline.com]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="7c129df7-de94-43ee-b5bb-4cedc5b6d068" x="121" y="108" width="169" height="15"/>
+				<textElement markup="none">
+					<font fontName="Serif" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{consignee_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="a568b00b-09e9-42ee-bff9-66fd0731910d" x="121" y="128" width="169" height="15"/>
+				<textElement markup="none">
+					<font fontName="Serif" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{vassel_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="f7ca9440-2d1d-442f-b1e8-f66a30eab096" x="121" y="148" width="47" height="15"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="SansSerif" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{voyage_no}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e7bb9c6e-dbf1-4d98-8b8f-100e1cf32c51" x="121" y="168" width="73" height="15">
+					<printWhenExpression><![CDATA[$F{feet_20} >0]]></printWhenExpression>
+				</reportElement>
+				<textElement markup="none">
+					<font fontName="Serif" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{feet_20}.toString() + " X 20\' DC "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="5e3245eb-5f30-41c9-892e-3ffa14b06cdc" x="121" y="249" width="169" height="15"/>
+				<textElement markup="none">
+					<font fontName="Serif" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{container_yard}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="fa181a28-5c5e-4630-b57d-edf412a760d6" x="121" y="209" width="169" height="15"/>
+				<textElement markup="none">
+					<font fontName="Serif" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{destination}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="f39e6424-bf08-4622-94fd-c95021393657" x="121" y="229" width="169" height="15"/>
+				<textElement markup="none">
+					<font fontName="Serif" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{operator_code}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e35eca09-963f-44f2-835d-1c853281dfe4" x="121" y="188" width="169" height="15"/>
+				<textElement markup="none">
+					<font fontName="Serif" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{commodity}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e41b1cb9-bd85-4bc9-b215-47a5974d1baa" x="0" y="391" width="155" height="15"/>
+				<textElement markup="none">
+					<font fontName="Serif" size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{user_name}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd-MMM-yyyy">
+				<reportElement uuid="354c8c56-aa53-469d-a40f-ebc17bb2b636" x="455" y="0" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Serif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{date}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="2ac3482b-ad8d-44e9-a8d4-663e7051b831" x="405" y="0" width="50" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Serif" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Date :]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="09a4f78c-0f4b-417f-9e70-3b1dca917cea" x="194" y="168" width="75" height="15">
+					<printWhenExpression><![CDATA[$F{feet_40} >0]]></printWhenExpression>
+				</reportElement>
+				<textElement markup="none">
+					<font fontName="Serif" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{feet_40}.toString() + " X 40\' HC "]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement uuid="a635e422-7c96-4250-90b3-71f9fa85bd3a" x="121" y="269" width="213" height="41">
+					<printWhenExpression><![CDATA[$F{total_no_of_container}<= 5]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="booking_id">
+					<subreportParameterExpression><![CDATA[$P{booking_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "booking_report_subreport.jasper"]]></subreportExpression>
+			</subreport>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement uuid="548c01fa-8432-4a88-9e83-027c04be4ec6" x="211" y="148" width="59" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{etd}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="21b20965-4043-49eb-ae76-fa8d5e5500be" x="161" y="148" width="136" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9"/>
+				</textElement>
+				<text><![CDATA[( ETD YGN                         )]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ee9b65a4-a7fe-4353-9e2d-29b9b78b4dd1" x="121" y="269" width="182" height="15">
+					<printWhenExpression><![CDATA[$F{total_no_of_container}>5]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font fontName="Serif" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Container List As Per Attached]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<summary>
+		<band height="244" splitType="Stretch"/>
+	</summary>
+</jasperReport>

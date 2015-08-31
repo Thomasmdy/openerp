@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <!-- Sequences for shipping.bl_order -->
+        <record id="seq_type_shipping_bl_order" model="ir.sequence.type">
+            <field name="name">BL Order</field>
+            <field name="code">shipping.bl_order</field>
+        </record>
+
+        <record id="seq_shipping_bl_order" model="ir.sequence">
+            <field name="name">BL Order</field>
+            <field name="code">shipping.bl_order</field>
+            <field name="prefix">BLD%(month)s%(day)s%(year)s</field>
+            <field name="padding">3</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Sequences for shipping.bl_order.line -->
+        <record id="seq_type_shipping_bl_order_line" model="ir.sequence.type">
+            <field name="name">BL Order Line</field>
+            <field name="code">shipping.bl_order.line</field>
+        </record>
+
+        <record id="seq_shipping_bl_order_line" model="ir.sequence">
+            <field name="name">BL Order Line </field>
+            <field name="code">shipping.bl_order.line</field>
+            <field name="prefix">DZI%(month)s%(day)s%(year)s</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Sequences for shipping.bl_order.line Export -->
+        <record id="seq_type_shipping_bl_order_line_export" model="ir.sequence.type">
+            <field name="name">BL Order Line Export</field>
+            <field name="code">shipping.bl_order.line.export</field>
+        </record>
+
+        <record id="seq_shipping_bl_order_line_export" model="ir.sequence">
+            <field name="name">BL Order Line </field>
+            <field name="code">shipping.bl_order.line.export</field>
+            <field name="prefix">DZE%(month)s%(day)s%(year)s</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        
+         <!-- Sequences for shipping.bl_order.line.amendment -->
+        <record id="seq_type_shipping_bl_order_line_amendment" model="ir.sequence.type">
+            <field name="name">BL Order Line</field>
+            <field name="code">shipping.bl_order.line.amendment</field>
+        </record>
+
+        <record id="seq_shipping_bl_order_line_amendment" model="ir.sequence">
+            <field name="name">BL Order Line Amendment</field>
+            <field name="code">shipping.bl_order.line.amendment</field>
+            <field name="prefix">DZAMM%(month)s%(day)s%(year)s</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+         <!-- Sequences for detention.collection.receipt -->
+        <record id="seq_type_detention_collection_receipt" model="ir.sequence.type">
+            <field name="name">Detention Collection Receipt</field>
+            <field name="code">detention.collection.receipt</field>
+        </record>
+
+        <record id="seq_detention_collection_receipt" model="ir.sequence">
+            <field name="name"> Detention Collection Receipt </field>
+            <field name="code">detention.collection.receipt</field>
+            <field name="prefix">DZDC%(month)s%(day)s%(year)s</field>
+            <field name="padding">6</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        
+                 <!-- Sequences for detention.charge.receipt -->
+        <record id="seq_type_detention_charge_receipt" model="ir.sequence.type">
+            <field name="name">detention.charge.receipt</field>
+            <field name="code">detention.charge.receipt</field>
+        </record>
+
+        <record id="seq_detention_charge_receipt" model="ir.sequence">
+            <field name="name">detention.charge.receipt</field>
+            <field name="code">detention.charge.receipt</field>
+            <field name="prefix">DZD%(month)s%(day)s%(year)s</field>
+            <field name="padding">6</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        
+         <!-- Sequences for shipping_container_move -->
+        <record id="seq_type_shipping_container_move" model="ir.sequence.type">
+            <field name="name">shipping.container.move</field>
+            <field name="code">shipping.container.move</field>
+        </record>
+
+        <record id="seq_shipping_container_move" model="ir.sequence">
+            <field name="name">shipping.container.move</field>
+            <field name="code">shipping.container.move</field>
+            <field name="prefix">DZCMM%(month)s%(day)s%(year)s</field>
+            <field name="padding">6</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+         <!-- Sequences for booking reference -->
+        <record id="seq_type_booking_reference" model="ir.sequence.type">
+            <field name="name">shipping.booking</field>
+            <field name="code">shipping.booking</field>
+        </record>
+
+        <record id="seq_booking_reference" model="ir.sequence">
+            <field name="name">shipping.booking</field>
+            <field name="code">shipping.booking</field>
+            <field name="prefix">DZBK%(month)s%(day)s%(year)s</field>
+            <field name="padding">6</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Sequences for shipping payment -->
+        <record id="seq_type_general_payment" model="ir.sequence.type">
+            <field name="name">shipping.general.payment</field>
+            <field name="code">shipping.general.payment</field>
+        </record>
+
+        <record id="seq_general_payment" model="ir.sequence">
+            <field name="name">shipping.general.payment</field>
+            <field name="code">shipping.general.payment</field>
+            <field name="prefix">DZGP%(month)s%(day)s%(year)s</field>
+            <field name="padding">6</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        
+         <!-- Sequences for RO invoice -->
+        <record id="seq_type_shipping_release_order" model="ir.sequence.type">
+            <field name="name">shipping.release.order</field>
+            <field name="code">shipping.release.order</field>
+        </record>
+
+        <record id="seq_shipping_release_order" model="ir.sequence">
+            <field name="name">shipping.release.order</field>
+            <field name="code">shipping.release.order</field>
+            <field name="prefix">DZRO%(month)s%(day)s%(year)s</field>
+            <field name="padding">6</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        
+    </data>
+</openerp>
